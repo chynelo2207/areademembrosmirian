@@ -25,6 +25,14 @@ function MembersLayout() {
   const queryClient = useQueryClient();
   const { data: user } = useCurrentUser();
 
+  useEffect(() => {
+    if (!user) return;
+    void supabase.from("profiles").upsert({
+      id: user.id,
+      full_name: (user.user_metadata?.["full_name"] as string | undefined) ?? null,
+    });
+  }, [user]);
+
   async function handleSignOut() {
     await queryClient.cancelQueries();
     queryClient.clear();
