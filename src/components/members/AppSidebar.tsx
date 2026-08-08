@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { BookOpen, Download, Home, LifeBuoy, Megaphone } from "lucide-react";
+import { BookOpen, Download, Home, LifeBuoy, Megaphone, Settings, Sparkles } from "lucide-react";
 
 import {
   Sidebar,
@@ -12,17 +12,20 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useIsAdmin } from "@/hooks/useAdminData";
 
 const items = [
   { title: "Início", url: "/inicio", icon: Home },
   { title: "Módulos e aulas", url: "/modulos", icon: BookOpen },
   { title: "Materiais", url: "/materiais", icon: Download },
+  { title: "Ofertas", url: "/ofertas", icon: Sparkles },
   { title: "Comunidade", url: "/comunidade", icon: Megaphone },
   { title: "Suporte", url: "/suporte", icon: LifeBuoy },
 ] as const;
 
 export function AppSidebar() {
   const pathname = useRouterState({ select: (router) => router.location.pathname });
+  const { data: isAdmin } = useIsAdmin();
 
   return (
     <Sidebar collapsible="icon">
@@ -60,6 +63,27 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        {isAdmin && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Gestão</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname.startsWith("/admin")}
+                    tooltip="Administração"
+                  >
+                    <Link to="/admin" className="flex items-center gap-2">
+                      <Settings className="h-4 w-4" />
+                      <span>Administração</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
     </Sidebar>
   );
