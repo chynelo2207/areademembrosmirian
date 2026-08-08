@@ -16,7 +16,7 @@ type Table = "modules" | "lessons" | "materials" | "announcements" | "offers";
 export function useSaveRow(table: Table, queryKey: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ values, id }: { values: Record<string, unknown>; id?: string }) =>
+    mutationFn: ({ values, id }: { values: Record<string, unknown>; id?: string | undefined }) =>
       saveRow(table, values, id),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: [queryKey] });

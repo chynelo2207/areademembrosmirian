@@ -39,7 +39,7 @@ export async function fetchIsAdmin(): Promise<boolean> {
 
 type Table = "modules" | "lessons" | "materials" | "announcements" | "offers";
 
-export async function saveRow(table: Table, values: Record<string, unknown>, id?: string) {
+export async function saveRow(table: Table, values: Record<string, unknown>, id?: string | undefined) {
   if (id) {
     const { error } = await supabase
       .from(table)
