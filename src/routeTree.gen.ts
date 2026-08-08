@@ -12,9 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedComunidadeRouteImport } from './routes/_authenticated/comunidade'
 import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
 import { Route as AuthenticatedMateriaisRouteImport } from './routes/_authenticated/materiais'
+import { Route as AuthenticatedOfertasRouteImport } from './routes/_authenticated/ofertas'
 import { Route as AuthenticatedSuporteRouteImport } from './routes/_authenticated/suporte'
 import { Route as AuthenticatedAulaLessonIdRouteImport } from './routes/_authenticated/aula.$lessonId'
 import { Route as AuthenticatedModulosIndexRouteImport } from './routes/_authenticated/modulos.index'
@@ -34,6 +36,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedComunidadeRoute = AuthenticatedComunidadeRouteImport.update({
   id: '/comunidade',
   path: '/comunidade',
@@ -47,6 +54,11 @@ const AuthenticatedInicioRoute = AuthenticatedInicioRouteImport.update({
 const AuthenticatedMateriaisRoute = AuthenticatedMateriaisRouteImport.update({
   id: '/materiais',
   path: '/materiais',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedOfertasRoute = AuthenticatedOfertasRouteImport.update({
+  id: '/ofertas',
+  path: '/ofertas',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedSuporteRoute = AuthenticatedSuporteRouteImport.update({
@@ -76,9 +88,11 @@ const AuthenticatedModulosModuleIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/comunidade': typeof AuthenticatedComunidadeRoute
   '/inicio': typeof AuthenticatedInicioRoute
   '/materiais': typeof AuthenticatedMateriaisRoute
+  '/ofertas': typeof AuthenticatedOfertasRoute
   '/suporte': typeof AuthenticatedSuporteRoute
   '/aula/$lessonId': typeof AuthenticatedAulaLessonIdRoute
   '/modulos/$moduleId': typeof AuthenticatedModulosModuleIdRoute
@@ -87,9 +101,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/comunidade': typeof AuthenticatedComunidadeRoute
   '/inicio': typeof AuthenticatedInicioRoute
   '/materiais': typeof AuthenticatedMateriaisRoute
+  '/ofertas': typeof AuthenticatedOfertasRoute
   '/suporte': typeof AuthenticatedSuporteRoute
   '/aula/$lessonId': typeof AuthenticatedAulaLessonIdRoute
   '/modulos/$moduleId': typeof AuthenticatedModulosModuleIdRoute
@@ -100,9 +116,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/comunidade': typeof AuthenticatedComunidadeRoute
   '/_authenticated/inicio': typeof AuthenticatedInicioRoute
   '/_authenticated/materiais': typeof AuthenticatedMateriaisRoute
+  '/_authenticated/ofertas': typeof AuthenticatedOfertasRoute
   '/_authenticated/suporte': typeof AuthenticatedSuporteRoute
   '/_authenticated/aula/$lessonId': typeof AuthenticatedAulaLessonIdRoute
   '/_authenticated/modulos/$moduleId': typeof AuthenticatedModulosModuleIdRoute
@@ -113,9 +131,11 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/admin'
     | '/comunidade'
     | '/inicio'
     | '/materiais'
+    | '/ofertas'
     | '/suporte'
     | '/aula/$lessonId'
     | '/modulos/$moduleId'
@@ -124,9 +144,11 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/admin'
     | '/comunidade'
     | '/inicio'
     | '/materiais'
+    | '/ofertas'
     | '/suporte'
     | '/aula/$lessonId'
     | '/modulos/$moduleId'
@@ -136,9 +158,11 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/admin'
     | '/_authenticated/comunidade'
     | '/_authenticated/inicio'
     | '/_authenticated/materiais'
+    | '/_authenticated/ofertas'
     | '/_authenticated/suporte'
     | '/_authenticated/aula/$lessonId'
     | '/_authenticated/modulos/$moduleId'
@@ -174,6 +198,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/comunidade': {
       id: '/_authenticated/comunidade'
       path: '/comunidade'
@@ -193,6 +224,13 @@ declare module '@tanstack/react-router' {
       path: '/materiais'
       fullPath: '/materiais'
       preLoaderRoute: typeof AuthenticatedMateriaisRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/ofertas': {
+      id: '/_authenticated/ofertas'
+      path: '/ofertas'
+      fullPath: '/ofertas'
+      preLoaderRoute: typeof AuthenticatedOfertasRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/suporte': {
@@ -227,9 +265,11 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedComunidadeRoute: typeof AuthenticatedComunidadeRoute
   AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
   AuthenticatedMateriaisRoute: typeof AuthenticatedMateriaisRoute
+  AuthenticatedOfertasRoute: typeof AuthenticatedOfertasRoute
   AuthenticatedSuporteRoute: typeof AuthenticatedSuporteRoute
   AuthenticatedAulaLessonIdRoute: typeof AuthenticatedAulaLessonIdRoute
   AuthenticatedModulosModuleIdRoute: typeof AuthenticatedModulosModuleIdRoute
@@ -237,9 +277,11 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedComunidadeRoute: AuthenticatedComunidadeRoute,
   AuthenticatedInicioRoute: AuthenticatedInicioRoute,
   AuthenticatedMateriaisRoute: AuthenticatedMateriaisRoute,
+  AuthenticatedOfertasRoute: AuthenticatedOfertasRoute,
   AuthenticatedSuporteRoute: AuthenticatedSuporteRoute,
   AuthenticatedAulaLessonIdRoute: AuthenticatedAulaLessonIdRoute,
   AuthenticatedModulosModuleIdRoute: AuthenticatedModulosModuleIdRoute,
@@ -257,13 +299,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
