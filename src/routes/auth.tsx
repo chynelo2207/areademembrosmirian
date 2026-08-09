@@ -1,4 +1,5 @@
 import { createFileRoute, redirect, useNavigate, useSearch } from "@tanstack/react-router";
+import { MailCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -31,6 +32,8 @@ export const Route = createFileRoute("/auth")({
         property: "og:description",
         content: "Login da área de membros do Método Mirian Serrano.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: AuthPage,
@@ -51,6 +54,7 @@ function AuthPage() {
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
   const [checkEmail, setCheckEmail] = useState(false);
+  const [recoverySent, setRecoverySent] = useState(false);
 
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
@@ -65,7 +69,9 @@ function AuthPage() {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
     if (error) {
-      toast.error("Não foi possível entrar", { description: error.message });
+      toast.error("E-mail ou senha incorretos", {
+        description: "Se você criou a conta com Google ou esqueceu a senha, use “Esqueci minha senha”.",
+      });
       return;
     }
     navigate({ to: destination, replace: true });
@@ -88,13 +94,42 @@ function AuthPage() {
     });
     setLoading(false);
     if (error) {
-      toast.error("Não foi possível criar a conta", { description: error.message });
+      const weakPassword = error.message.toLowerCase().includes("weak") || error.message.toLowerCase().includes("guess");
+      toast.error("Não foi possível criar a conta", {
+        description: weakPassword
+          ? "Essa senha é muito comum. Escolha uma senha exclusiva com pelo menos 10 caracteres."
+          : error.message,
+      });
+      return;
+    }
+    if (data.user?.identities?.length === 0) {
+      toast.info("Este e-mail já possui uma conta", {
+        description: "Entre com Google ou use “Esqueci minha senha” para criar uma senha.",
+      });
       return;
     }
     if (!data.session) {
       setCheckEmail(true);
       toast.success("Confirme seu e-mail para ativar o acesso");
     }
+  }
+
+  async function handleForgotPassword() {
+    const normalizedEmail = email.trim();
+    if (!normalizedEmail) {
+      toast.error("Informe seu e-mail primeiro");
+      return;
+    }
+    setLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setLoading(false);
+    if (error) {
+      toast.error("Não foi possível enviar o link", { description: error.message });
+      return;
+    }
+    setRecoverySent(true);
   }
 
   async function handleGoogle() {
@@ -117,11 +152,18 @@ function AuthPage() {
         </p>
         <h1 className="mt-3 text-center font-serif text-3xl text-primary">Área de membros</h1>
 
-        {checkEmail ? (
-          <p className="mt-8 rounded-lg bg-accent p-4 text-center text-sm text-accent-foreground">
-            Enviamos um link de confirmação para <strong>{email}</strong>. Confirme para liberar
-            seu acesso.
-          </p>
+        {checkEmail || recoverySent ? (
+          <div className="mt-8 rounded-lg bg-accent p-5 text-center text-sm text-accent-foreground">
+            <MailCheck className="mx-auto mb-3 h-6 w-6 text-primary" aria-hidden="true" />
+            {recoverySent ? (
+              <p>Enviamos para <strong>{email}</strong> um link para você criar uma nova senha.</p>
+            ) : (
+              <p>Enviamos um link de confirmação para <strong>{email}</strong>. Confirme para liberar seu acesso.</p>
+            )}
+            <Button variant="link" className="mt-2" onClick={() => { setCheckEmail(false); setRecoverySent(false); }}>
+              Voltar
+            </Button>
+          </div>
         ) : (
           <Tabs defaultValue="entrar" className="mt-8">
             <TabsList className="grid w-full grid-cols-2">
@@ -153,6 +195,11 @@ function AuthPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
+                  <div className="text-right">
+                    <Button type="button" variant="link" className="h-auto px-0 py-0 text-xs" onClick={handleForgotPassword} disabled={loading}>
+                      Esqueci minha senha
+                    </Button>
+                  </div>
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Entrando..." : "Entrar"}
@@ -189,12 +236,13 @@ function AuthPage() {
                     id="password-signup"
                     type="password"
                     required
-                    minLength={6}
+                    minLength={10}
                     maxLength={72}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
+                <p className="text-xs text-muted-foreground">Use pelo menos 10 caracteres e evite senhas comuns.</p>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Criando..." : "Criar minha conta"}
                 </Button>
