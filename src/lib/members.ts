@@ -99,6 +99,36 @@ export async function toggleLessonDone(lessonId: string, done: boolean) {
   }
 }
 
+/**
+ * Converte links normais (YouTube, Vimeo, Panda, Drive) no formato incorporável.
+ * Vídeos "não listados" do YouTube funcionam normalmente em iframe.
+ */
+export function toEmbedUrl(raw: string): string {
+  const url = raw.trim();
+  if (!url) return url;
+
+  const youtubeId =
+    url.match(/[?&]v=([\w-]{6,})/)?.[1] ??
+    url.match(/youtu\.be\/([\w-]{6,})/)?.[1] ??
+    url.match(/youtube\.com\/(?:embed|live|shorts|v)\/([\w-]{6,})/)?.[1];
+  if (youtubeId) {
+    const list = url.match(/[?&]list=([\w-]+)/)?.[1];
+    const start = url.match(/[?&](?:t|start)=(\d+)/)?.[1];
+    const params = new URLSearchParams({ rel: "0", modestbranding: "1" });
+    if (list) params.set("list", list);
+    if (start) params.set("start", start);
+    return `https://www.youtube-nocookie.com/embed/${youtubeId}?${params.toString()}`;
+  }
+
+  const vimeoId = url.match(/vimeo\.com\/(?:video\/)?(\d+)/)?.[1];
+  if (vimeoId) return `https://player.vimeo.com/video/${vimeoId}`;
+
+  const driveId = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/)?.[1];
+  if (driveId) return `https://drive.google.com/file/d/${driveId}/preview`;
+
+  return url;
+}
+
 export function modulePercent(
   lessons: LessonRow[],
   doneIds: string[],

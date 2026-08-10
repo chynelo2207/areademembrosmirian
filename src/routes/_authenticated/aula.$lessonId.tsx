@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLessons, useModules, useProgress } from "@/hooks/useMembersData";
-import { toggleLessonDone } from "@/lib/members";
+import { toEmbedUrl, toggleLessonDone } from "@/lib/members";
 
 export const Route = createFileRoute("/_authenticated/aula/$lessonId")({
   head: () => ({
@@ -77,7 +77,8 @@ function LessonPage() {
         <div className="aspect-video w-full">
           {lesson.video_url ? (
             <iframe
-              src={lesson.video_url}
+              src={toEmbedUrl(lesson.video_url)}
+              referrerPolicy="strict-origin-when-cross-origin"
               title={lesson.title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"
               allowFullScreen
