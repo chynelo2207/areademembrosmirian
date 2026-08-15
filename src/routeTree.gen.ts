@@ -19,6 +19,7 @@ import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedMateriaisRouteImport } from './routes/_authenticated/materiais'
 import { Route as AuthenticatedOfertasRouteImport } from './routes/_authenticated/ofertas'
 import { Route as AuthenticatedSuporteRouteImport } from './routes/_authenticated/suporte'
+import { Route as AuthenticatedUpgradeRouteImport } from './routes/_authenticated/upgrade'
 import { Route as AuthenticatedAulaLessonIdRouteImport } from './routes/_authenticated/aula.$lessonId'
 import { Route as AuthenticatedModulosIndexRouteImport } from './routes/_authenticated/modulos.index'
 import { Route as AuthenticatedModulosModuleIdRouteImport } from './routes/_authenticated/modulos.$moduleId'
@@ -72,6 +73,11 @@ const AuthenticatedSuporteRoute = AuthenticatedSuporteRouteImport.update({
   path: '/suporte',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedUpgradeRoute = AuthenticatedUpgradeRouteImport.update({
+  id: '/upgrade',
+  path: '/upgrade',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAulaLessonIdRoute =
   AuthenticatedAulaLessonIdRouteImport.update({
     id: '/aula/$lessonId',
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/materiais': typeof AuthenticatedMateriaisRoute
   '/ofertas': typeof AuthenticatedOfertasRoute
   '/suporte': typeof AuthenticatedSuporteRoute
+  '/upgrade': typeof AuthenticatedUpgradeRoute
   '/aula/$lessonId': typeof AuthenticatedAulaLessonIdRoute
   '/modulos/$moduleId': typeof AuthenticatedModulosModuleIdRoute
   '/modulos/': typeof AuthenticatedModulosIndexRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/materiais': typeof AuthenticatedMateriaisRoute
   '/ofertas': typeof AuthenticatedOfertasRoute
   '/suporte': typeof AuthenticatedSuporteRoute
+  '/upgrade': typeof AuthenticatedUpgradeRoute
   '/aula/$lessonId': typeof AuthenticatedAulaLessonIdRoute
   '/modulos/$moduleId': typeof AuthenticatedModulosModuleIdRoute
   '/modulos': typeof AuthenticatedModulosIndexRoute
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   '/_authenticated/materiais': typeof AuthenticatedMateriaisRoute
   '/_authenticated/ofertas': typeof AuthenticatedOfertasRoute
   '/_authenticated/suporte': typeof AuthenticatedSuporteRoute
+  '/_authenticated/upgrade': typeof AuthenticatedUpgradeRoute
   '/_authenticated/aula/$lessonId': typeof AuthenticatedAulaLessonIdRoute
   '/_authenticated/modulos/$moduleId': typeof AuthenticatedModulosModuleIdRoute
   '/_authenticated/modulos/': typeof AuthenticatedModulosIndexRoute
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
     | '/materiais'
     | '/ofertas'
     | '/suporte'
+    | '/upgrade'
     | '/aula/$lessonId'
     | '/modulos/$moduleId'
     | '/modulos/'
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/materiais'
     | '/ofertas'
     | '/suporte'
+    | '/upgrade'
     | '/aula/$lessonId'
     | '/modulos/$moduleId'
     | '/modulos'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/_authenticated/materiais'
     | '/_authenticated/ofertas'
     | '/_authenticated/suporte'
+    | '/_authenticated/upgrade'
     | '/_authenticated/aula/$lessonId'
     | '/_authenticated/modulos/$moduleId'
     | '/_authenticated/modulos/'
@@ -260,6 +272,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSuporteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/upgrade': {
+      id: '/_authenticated/upgrade'
+      path: '/upgrade'
+      fullPath: '/upgrade'
+      preLoaderRoute: typeof AuthenticatedUpgradeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/aula/$lessonId': {
       id: '/_authenticated/aula/$lessonId'
       path: '/aula/$lessonId'
@@ -291,6 +310,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMateriaisRoute: typeof AuthenticatedMateriaisRoute
   AuthenticatedOfertasRoute: typeof AuthenticatedOfertasRoute
   AuthenticatedSuporteRoute: typeof AuthenticatedSuporteRoute
+  AuthenticatedUpgradeRoute: typeof AuthenticatedUpgradeRoute
   AuthenticatedAulaLessonIdRoute: typeof AuthenticatedAulaLessonIdRoute
   AuthenticatedModulosModuleIdRoute: typeof AuthenticatedModulosModuleIdRoute
   AuthenticatedModulosIndexRoute: typeof AuthenticatedModulosIndexRoute
@@ -303,6 +323,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMateriaisRoute: AuthenticatedMateriaisRoute,
   AuthenticatedOfertasRoute: AuthenticatedOfertasRoute,
   AuthenticatedSuporteRoute: AuthenticatedSuporteRoute,
+  AuthenticatedUpgradeRoute: AuthenticatedUpgradeRoute,
   AuthenticatedAulaLessonIdRoute: AuthenticatedAulaLessonIdRoute,
   AuthenticatedModulosModuleIdRoute: AuthenticatedModulosModuleIdRoute,
   AuthenticatedModulosIndexRoute: AuthenticatedModulosIndexRoute,
