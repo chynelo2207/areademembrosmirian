@@ -3,6 +3,7 @@ import { createFileRoute, Outlet, redirect, useNavigate } from "@tanstack/react-
 import { LogOut } from "lucide-react";
 import { useEffect } from "react";
 
+import { AccessGate } from "@/components/members/AccessGate";
 import { AppSidebar } from "@/components/members/AppSidebar";
 import { Button } from "@/components/ui/button";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -45,6 +46,7 @@ function MembersLayout() {
     (user?.user_metadata?.["full_name"] as string | undefined) ?? user?.email ?? "Aluna";
 
   return (
+    <AccessGate onSignOut={handleSignOut}>
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-background">
         <AppSidebar />
@@ -72,5 +74,6 @@ function MembersLayout() {
         </div>
       </div>
     </SidebarProvider>
+    </AccessGate>
   );
 }
