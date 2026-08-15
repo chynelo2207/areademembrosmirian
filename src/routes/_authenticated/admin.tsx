@@ -233,6 +233,41 @@ function AdminPage() {
             onDelete={(id) => deleteOffer.mutate(id)}
           />
         </TabsContent>
+
+        <TabsContent value="acessos" className="mt-4">
+          <CrudSection
+            title="Acessos liberados"
+            description="Somente e-mails desta lista conseguem entrar. Compras da Cakto entram automaticamente."
+            addLabel="Liberar e-mail"
+            isLoading={grants.isLoading}
+            items={grants.data ?? []}
+            fields={[
+              { name: "email", label: "E-mail da compra", type: "text", required: true },
+              {
+                name: "plan",
+                label: "Plano",
+                type: "select",
+                options: [
+                  { value: "classico", label: "Clássico (módulo inicial)" },
+                  { value: "completo", label: "Completo (todos os módulos)" },
+                ],
+                required: true,
+              },
+              { name: "order_id", label: "Código do pedido (opcional)", type: "text" },
+              { name: "note", label: "Observação", type: "textarea" },
+            ]}
+            renderTitle={(item) => String(item["email"])}
+            renderSubtitle={(item) =>
+              `${item["plan"] === "completo" ? "Completo" : "Clássico"} · ${String(item["source"] ?? "manual")}`
+            }
+            onSave={(values, id) => saveGrant.mutate({ values, id })}
+            onDelete={(id) => deleteGrant.mutate(id)}
+          />
+        </TabsContent>
+
+        <TabsContent value="ajustes" className="mt-4">
+          <SettingsSection />
+        </TabsContent>
       </Tabs>
     </div>
   );
