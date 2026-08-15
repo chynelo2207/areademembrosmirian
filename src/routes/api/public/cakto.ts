@@ -102,7 +102,9 @@ export const Route = createFileRoute("/api/public/cakto")({
         }
 
         // R$ 27,90 => clássico. R$ 47,90 (ou upgrade de R$ 20) => completo.
-        const plan = amount !== null && amount > 0 && amount < 40 && amount > 25 ? "classico" : "completo";
+        // Valores podem chegar em reais ou centavos.
+        const value = amount === null ? null : amount > 1000 ? amount / 100 : amount;
+        const plan = value !== null && value >= 25 && value < 40 ? "classico" : "completo";
 
         const { data: existing } = await supabaseAdmin
           .from("access_grants")
