@@ -7,7 +7,6 @@ export type ModuleRow = {
   position: number;
   coming_soon: boolean;
   cover_url: string | null;
-  required_plan: "classico" | "completo";
 };
 
 export type LessonRow = {
@@ -42,7 +41,7 @@ export type AnnouncementRow = {
 export async function fetchModules(): Promise<ModuleRow[]> {
   const { data, error } = await supabase
     .from("modules")
-    .select("id, title, description, position, coming_soon, cover_url, required_plan")
+    .select("id, title, description, position, coming_soon, cover_url")
     .order("position", { ascending: true });
   if (error) throw error;
   return data ?? [];

@@ -11,7 +11,7 @@ export function useOffers() {
   return useQuery({ queryKey: ["offers"], queryFn: fetchOffers });
 }
 
-type Table = "modules" | "lessons" | "materials" | "announcements" | "offers" | "access_grants";
+type Table = "modules" | "lessons" | "materials" | "announcements" | "offers";
 
 export function useSaveRow(table: Table, queryKey: string) {
   const queryClient = useQueryClient();

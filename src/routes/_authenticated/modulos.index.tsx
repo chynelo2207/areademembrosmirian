@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronRight, Clock, Crown, Lock } from "lucide-react";
+import { ChevronRight, Clock, Lock } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,8 +7,6 @@ import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLessons, useModules, useProgress } from "@/hooks/useMembersData";
 import { modulePercent } from "@/lib/members";
-import { canOpenModule } from "@/lib/access";
-import { useMyPlan } from "@/hooks/useAccess";
 
 export const Route = createFileRoute("/_authenticated/modulos/")({
   head: () => ({
@@ -30,7 +28,6 @@ function ModulesPage() {
   const modules = useModules();
   const lessons = useLessons();
   const progress = useProgress();
-  const plan = useMyPlan();
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -46,7 +43,6 @@ function ModulesPage() {
             ))
           : (modules.data ?? []).map((module) => {
               const stats = modulePercent(lessons.data ?? [], progress.data ?? [], module.id);
-              const unlocked = canOpenModule(plan.data ?? null, module.required_plan);
               const content = (
                 <Card className="transition-colors hover:border-gold">
                   <CardHeader className="pb-3">
@@ -63,10 +59,6 @@ function ModulesPage() {
                         <Badge variant="secondary" className="shrink-0 gap-1">
                           <Lock className="h-3 w-3" /> Em breve
                         </Badge>
-                      ) : !unlocked ? (
-                        <Badge className="shrink-0 gap-1 bg-primary text-primary-foreground">
-                          <Crown className="h-3 w-3" /> Curso completo
-                        </Badge>
                       ) : (
                         <Badge variant="secondary" className="shrink-0 gap-1">
                           <Clock className="h-3 w-3" /> {stats.total} aulas
@@ -78,12 +70,7 @@ function ModulesPage() {
                     {module.description && (
                       <p className="text-sm text-muted-foreground">{module.description}</p>
                     )}
-                    {!module.coming_soon && !unlocked && (
-                      <p className="mt-4 text-xs text-muted-foreground">
-                        Este módulo faz parte do curso completo. Libere pagando apenas a diferença.
-                      </p>
-                    )}
-                    {!module.coming_soon && unlocked && (
+                    {!module.coming_soon && (
                       <div className="mt-4 flex items-center gap-3">
                         <Progress value={stats.percent} className="h-1.5 flex-1" />
                         <span className="text-xs text-muted-foreground">
@@ -100,10 +87,6 @@ function ModulesPage() {
                 <div key={module.id} className="opacity-70">
                   {content}
                 </div>
-              ) : !unlocked ? (
-                <Link key={module.id} to="/upgrade" className="block opacity-80">
-                  {content}
-                </Link>
               ) : (
                 <Link key={module.id} to="/modulos/$moduleId" params={{ moduleId: module.id }}>
                   {content}

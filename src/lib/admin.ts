@@ -37,7 +37,7 @@ export async function fetchIsAdmin(): Promise<boolean> {
   return Boolean(data);
 }
 
-type Table = "modules" | "lessons" | "materials" | "announcements" | "offers" | "access_grants";
+type Table = "modules" | "lessons" | "materials" | "announcements" | "offers";
 
 export async function saveRow(table: Table, values: Record<string, unknown>, id?: string | undefined) {
   if (id) {

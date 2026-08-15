@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { BookOpen, Crown, Download, Home, LifeBuoy, Megaphone, Settings, Sparkles } from "lucide-react";
+import { BookOpen, Download, Home, LifeBuoy, Megaphone, Settings, Sparkles } from "lucide-react";
 
 import {
   Sidebar,
@@ -13,7 +13,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useIsAdmin } from "@/hooks/useAdminData";
-import { useMyPlan } from "@/hooks/useAccess";
 
 const items = [
   { title: "Início", url: "/inicio", icon: Home },
@@ -27,7 +26,6 @@ const items = [
 export function AppSidebar() {
   const pathname = useRouterState({ select: (router) => router.location.pathname });
   const { data: isAdmin } = useIsAdmin();
-  const { data: plan } = useMyPlan();
 
   return (
     <Sidebar collapsible="icon">
@@ -62,20 +60,6 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-              {plan === "classico" && (
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname.startsWith("/upgrade")}
-                    tooltip="Liberar curso completo"
-                  >
-                    <Link to="/upgrade" className="flex items-center gap-2">
-                      <Crown className="h-4 w-4 text-sidebar-primary" />
-                      <span>Curso completo</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
