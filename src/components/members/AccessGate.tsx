@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { Lock } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -36,9 +35,6 @@ export function AccessGate({ children, onSignOut }: Props) {
             <a href="https://metodomirianserrano.lovable.app" target="_blank" rel="noopener noreferrer">
               Quero comprar o curso
             </a>
-          </Button>
-          <Button variant="outline" asChild>
-            <Link to="/suporte">Falar com o suporte</Link>
           </Button>
           <Button variant="ghost" onClick={onSignOut}>
             Entrar com outro e-mail
