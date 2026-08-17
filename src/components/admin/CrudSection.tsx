@@ -193,7 +193,82 @@ export function CrudSection({
                       </SelectContent>
                     </Select>
                   )}
+                  {field.type === "file" && (
+                    <div className="space-y-2">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        className="hidden"
+                        accept={field.accept ?? "application/pdf,image/*"}
+                        onChange={async (event) => {
+                          const file = event.target.files?.[0];
+                          event.target.value = "";
+                          if (!file) return;
+                          setUploading(field.name);
+                          try {
+                            const reference = await uploadMaterialFile(file);
+                            setValues((prev) => ({ ...prev, [field.name]: reference }));
+                            toast.success("Arquivo enviado");
+                          } catch (error) {
+                            toast.error(
+                              error instanceof Error ? error.message : "Falha ao enviar arquivo",
+                            );
+                          } finally {
+                            setUploading(null);
+                          }
+                        }}
+                      />
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          disabled={uploading === field.name}
+                          onClick={() => fileInputRef.current?.click()}
+                        >
+                          {uploading === field.name ? (
+                            <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />
+                          ) : (
+                            <Upload className="mr-1.5 h-4 w-4" />
+                          )}
+                          Enviar PDF ou imagem
+                        </Button>
+                        {values[field.name] ? (
+                          <span className="max-w-[16rem] truncate text-xs text-muted-foreground">
+                            {String(values[field.name]).replace(/^storage:\d+-/, "")}
+                          </span>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">
+                            Nenhum arquivo enviado
+                          </span>
+                        )}
+                        {values[field.name] ? (
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setValues((prev) => ({ ...prev, [field.name]: "" }))}
+                          >
+                            Remover
+                          </Button>
+                        ) : null}
+                      </div>
+                      <Input
+                        id={`${title}-${field.name}`}
+                        placeholder="ou cole um link externo (https://...)"
+                        value={
+                          String(values[field.name] ?? "").startsWith("storage:")
+                            ? ""
+                            : String(values[field.name] ?? "")
+                        }
+                        onChange={(event) =>
+                          setValues((prev) => ({ ...prev, [field.name]: event.target.value }))
+                        }
+                      />
+                    </div>
+                  )}
                 </div>
+
               ))}
             </div>
             <DialogFooter>
