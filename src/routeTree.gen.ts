@@ -19,9 +19,11 @@ import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedMateriaisRouteImport } from './routes/_authenticated/materiais'
 import { Route as AuthenticatedOfertasRouteImport } from './routes/_authenticated/ofertas'
 import { Route as AuthenticatedSuporteRouteImport } from './routes/_authenticated/suporte'
+import { Route as AuthenticatedUpgradeRouteImport } from './routes/_authenticated/upgrade'
 import { Route as AuthenticatedAulaLessonIdRouteImport } from './routes/_authenticated/aula.$lessonId'
 import { Route as AuthenticatedModulosIndexRouteImport } from './routes/_authenticated/modulos.index'
 import { Route as AuthenticatedModulosModuleIdRouteImport } from './routes/_authenticated/modulos.$moduleId'
+import { Route as ApiPublicCaktoRouteImport } from './routes/api/public/cakto'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -72,6 +74,11 @@ const AuthenticatedSuporteRoute = AuthenticatedSuporteRouteImport.update({
   path: '/suporte',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedUpgradeRoute = AuthenticatedUpgradeRouteImport.update({
+  id: '/upgrade',
+  path: '/upgrade',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAulaLessonIdRoute =
   AuthenticatedAulaLessonIdRouteImport.update({
     id: '/aula/$lessonId',
@@ -90,6 +97,11 @@ const AuthenticatedModulosModuleIdRoute =
     path: '/modulos/$moduleId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicCaktoRoute = ApiPublicCaktoRouteImport.update({
+  id: '/api/public/cakto',
+  path: '/api/public/cakto',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -101,8 +113,10 @@ export interface FileRoutesByFullPath {
   '/materiais': typeof AuthenticatedMateriaisRoute
   '/ofertas': typeof AuthenticatedOfertasRoute
   '/suporte': typeof AuthenticatedSuporteRoute
+  '/upgrade': typeof AuthenticatedUpgradeRoute
   '/aula/$lessonId': typeof AuthenticatedAulaLessonIdRoute
   '/modulos/$moduleId': typeof AuthenticatedModulosModuleIdRoute
+  '/api/public/cakto': typeof ApiPublicCaktoRoute
   '/modulos/': typeof AuthenticatedModulosIndexRoute
 }
 export interface FileRoutesByTo {
@@ -115,8 +129,10 @@ export interface FileRoutesByTo {
   '/materiais': typeof AuthenticatedMateriaisRoute
   '/ofertas': typeof AuthenticatedOfertasRoute
   '/suporte': typeof AuthenticatedSuporteRoute
+  '/upgrade': typeof AuthenticatedUpgradeRoute
   '/aula/$lessonId': typeof AuthenticatedAulaLessonIdRoute
   '/modulos/$moduleId': typeof AuthenticatedModulosModuleIdRoute
+  '/api/public/cakto': typeof ApiPublicCaktoRoute
   '/modulos': typeof AuthenticatedModulosIndexRoute
 }
 export interface FileRoutesById {
@@ -131,8 +147,10 @@ export interface FileRoutesById {
   '/_authenticated/materiais': typeof AuthenticatedMateriaisRoute
   '/_authenticated/ofertas': typeof AuthenticatedOfertasRoute
   '/_authenticated/suporte': typeof AuthenticatedSuporteRoute
+  '/_authenticated/upgrade': typeof AuthenticatedUpgradeRoute
   '/_authenticated/aula/$lessonId': typeof AuthenticatedAulaLessonIdRoute
   '/_authenticated/modulos/$moduleId': typeof AuthenticatedModulosModuleIdRoute
+  '/api/public/cakto': typeof ApiPublicCaktoRoute
   '/_authenticated/modulos/': typeof AuthenticatedModulosIndexRoute
 }
 export interface FileRouteTypes {
@@ -147,8 +165,10 @@ export interface FileRouteTypes {
     | '/materiais'
     | '/ofertas'
     | '/suporte'
+    | '/upgrade'
     | '/aula/$lessonId'
     | '/modulos/$moduleId'
+    | '/api/public/cakto'
     | '/modulos/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -161,8 +181,10 @@ export interface FileRouteTypes {
     | '/materiais'
     | '/ofertas'
     | '/suporte'
+    | '/upgrade'
     | '/aula/$lessonId'
     | '/modulos/$moduleId'
+    | '/api/public/cakto'
     | '/modulos'
   id:
     | '__root__'
@@ -176,8 +198,10 @@ export interface FileRouteTypes {
     | '/_authenticated/materiais'
     | '/_authenticated/ofertas'
     | '/_authenticated/suporte'
+    | '/_authenticated/upgrade'
     | '/_authenticated/aula/$lessonId'
     | '/_authenticated/modulos/$moduleId'
+    | '/api/public/cakto'
     | '/_authenticated/modulos/'
   fileRoutesById: FileRoutesById
 }
@@ -186,6 +210,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ApiPublicCaktoRoute: typeof ApiPublicCaktoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -260,6 +285,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSuporteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/upgrade': {
+      id: '/_authenticated/upgrade'
+      path: '/upgrade'
+      fullPath: '/upgrade'
+      preLoaderRoute: typeof AuthenticatedUpgradeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/aula/$lessonId': {
       id: '/_authenticated/aula/$lessonId'
       path: '/aula/$lessonId'
@@ -281,6 +313,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedModulosModuleIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/cakto': {
+      id: '/api/public/cakto'
+      path: '/api/public/cakto'
+      fullPath: '/api/public/cakto'
+      preLoaderRoute: typeof ApiPublicCaktoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -291,6 +330,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMateriaisRoute: typeof AuthenticatedMateriaisRoute
   AuthenticatedOfertasRoute: typeof AuthenticatedOfertasRoute
   AuthenticatedSuporteRoute: typeof AuthenticatedSuporteRoute
+  AuthenticatedUpgradeRoute: typeof AuthenticatedUpgradeRoute
   AuthenticatedAulaLessonIdRoute: typeof AuthenticatedAulaLessonIdRoute
   AuthenticatedModulosModuleIdRoute: typeof AuthenticatedModulosModuleIdRoute
   AuthenticatedModulosIndexRoute: typeof AuthenticatedModulosIndexRoute
@@ -303,6 +343,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMateriaisRoute: AuthenticatedMateriaisRoute,
   AuthenticatedOfertasRoute: AuthenticatedOfertasRoute,
   AuthenticatedSuporteRoute: AuthenticatedSuporteRoute,
+  AuthenticatedUpgradeRoute: AuthenticatedUpgradeRoute,
   AuthenticatedAulaLessonIdRoute: AuthenticatedAulaLessonIdRoute,
   AuthenticatedModulosModuleIdRoute: AuthenticatedModulosModuleIdRoute,
   AuthenticatedModulosIndexRoute: AuthenticatedModulosIndexRoute,
@@ -316,7 +357,18 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ApiPublicCaktoRoute: ApiPublicCaktoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      access_grants: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          note: string | null
+          order_id: string | null
+          plan: Database["public"]["Enums"]["access_plan"]
+          source: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          note?: string | null
+          order_id?: string | null
+          plan?: Database["public"]["Enums"]["access_plan"]
+          source?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          note?: string | null
+          order_id?: string | null
+          plan?: Database["public"]["Enums"]["access_plan"]
+          source?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       announcements: {
         Row: {
           body: string
@@ -38,6 +71,24 @@ export type Database = {
           link_url?: string | null
           pinned?: boolean
           title?: string
+        }
+        Relationships: []
+      }
+      app_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          value: string | null
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value?: string | null
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: string | null
         }
         Relationships: []
       }
@@ -157,6 +208,7 @@ export type Database = {
           description: string | null
           id: string
           position: number
+          required_plan: Database["public"]["Enums"]["access_plan"]
           title: string
         }
         Insert: {
@@ -166,6 +218,7 @@ export type Database = {
           description?: string | null
           id?: string
           position?: number
+          required_plan?: Database["public"]["Enums"]["access_plan"]
           title: string
         }
         Update: {
@@ -175,6 +228,7 @@ export type Database = {
           description?: string | null
           id?: string
           position?: number
+          required_plan?: Database["public"]["Enums"]["access_plan"]
           title?: string
         }
         Relationships: []
@@ -274,6 +328,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_view_module: { Args: { _module_id: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -281,8 +336,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      my_plan: { Args: never; Returns: string }
     }
     Enums: {
+      access_plan: "classico" | "completo"
       app_role: "admin" | "aluno"
     }
     CompositeTypes: {
@@ -411,6 +468,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      access_plan: ["classico", "completo"],
       app_role: ["admin", "aluno"],
     },
   },

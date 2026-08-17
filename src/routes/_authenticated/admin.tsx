@@ -1,6 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
 import { CrudSection } from "@/components/admin/CrudSection";
+import { SettingsSection } from "@/components/admin/SettingsSection";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDeleteRow, useOffers, useSaveRow } from "@/hooks/useAdminData";
 import {
@@ -10,6 +11,7 @@ import {
   useModules,
 } from "@/hooks/useMembersData";
 import { fetchIsAdmin } from "@/lib/admin";
+import { useGrants } from "@/hooks/useAccess";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   beforeLoad: async () => {
@@ -39,6 +41,7 @@ function AdminPage() {
   const materials = useMaterials();
   const announcements = useAnnouncements();
   const offers = useOffers();
+  const grants = useGrants();
 
   const saveModule = useSaveRow("modules", "modules");
   const deleteModule = useDeleteRow("modules", "modules");
@@ -48,6 +51,8 @@ function AdminPage() {
   const deleteMaterial = useDeleteRow("materials", "materials");
   const saveAnnouncement = useSaveRow("announcements", "announcements");
   const deleteAnnouncement = useDeleteRow("announcements", "announcements");
+  const saveGrant = useSaveRow("access_grants", "access-grants");
+  const deleteGrant = useDeleteRow("access_grants", "access-grants");
   const saveOffer = useSaveRow("offers", "offers");
   const deleteOffer = useDeleteRow("offers", "offers");
 
@@ -72,6 +77,8 @@ function AdminPage() {
           <TabsTrigger value="materiais">Materiais</TabsTrigger>
           <TabsTrigger value="recados">Recados</TabsTrigger>
           <TabsTrigger value="ofertas">Ofertas</TabsTrigger>
+          <TabsTrigger value="acessos">Acessos</TabsTrigger>
+          <TabsTrigger value="ajustes">Ajustes</TabsTrigger>
         </TabsList>
 
         <TabsContent value="conteudo" className="mt-4">
@@ -86,11 +93,22 @@ function AdminPage() {
               { name: "description", label: "Descrição", type: "textarea" },
               { name: "position", label: "Ordem", type: "number" },
               { name: "cover_url", label: "Imagem de capa (URL)", type: "text" },
+              {
+                name: "required_plan",
+                label: "Plano necessário",
+                type: "select",
+                options: [
+                  { value: "classico", label: "Clássico (R$ 27,90)" },
+                  { value: "completo", label: "Completo (R$ 47,90)" },
+                ],
+              },
               { name: "coming_soon", label: "Em breve", type: "switch" },
             ]}
             renderTitle={(item) => String(item["title"])}
             renderSubtitle={(item) =>
-              `Ordem ${String(item["position"])}${item["coming_soon"] ? " · em breve" : ""}`
+              `Ordem ${String(item["position"])} · ${
+                item["required_plan"] === "classico" ? "clássico" : "completo"
+              }${item["coming_soon"] ? " · em breve" : ""}`
             }
             onSave={(values, id) => saveModule.mutate({ values, id })}
             onDelete={(id) => deleteModule.mutate(id)}
@@ -214,6 +232,41 @@ function AdminPage() {
             onSave={(values, id) => saveOffer.mutate({ values, id })}
             onDelete={(id) => deleteOffer.mutate(id)}
           />
+        </TabsContent>
+
+        <TabsContent value="acessos" className="mt-4">
+          <CrudSection
+            title="Acessos liberados"
+            description="Somente e-mails desta lista conseguem entrar. Compras da Cakto entram automaticamente."
+            addLabel="Liberar e-mail"
+            isLoading={grants.isLoading}
+            items={grants.data ?? []}
+            fields={[
+              { name: "email", label: "E-mail da compra", type: "text", required: true },
+              {
+                name: "plan",
+                label: "Plano",
+                type: "select",
+                options: [
+                  { value: "classico", label: "Clássico (módulo inicial)" },
+                  { value: "completo", label: "Completo (todos os módulos)" },
+                ],
+                required: true,
+              },
+              { name: "order_id", label: "Código do pedido (opcional)", type: "text" },
+              { name: "note", label: "Observação", type: "textarea" },
+            ]}
+            renderTitle={(item) => String(item["email"])}
+            renderSubtitle={(item) =>
+              `${item["plan"] === "completo" ? "Completo" : "Clássico"} · ${String(item["source"] ?? "manual")}`
+            }
+            onSave={(values, id) => saveGrant.mutate({ values, id })}
+            onDelete={(id) => deleteGrant.mutate(id)}
+          />
+        </TabsContent>
+
+        <TabsContent value="ajustes" className="mt-4">
+          <SettingsSection />
         </TabsContent>
       </Tabs>
     </div>
