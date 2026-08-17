@@ -267,6 +267,10 @@ function AdminPage() {
           />
         </TabsContent>
 
+        <TabsContent value="usuarios" className="mt-4">
+          <UsersSection />
+        </TabsContent>
+
         <TabsContent value="ajustes" className="mt-4">
           <SettingsSection />
         </TabsContent>
