@@ -1,0 +1,4 @@
+CREATE POLICY "materiais_read_authenticated" ON storage.objects FOR SELECT TO authenticated USING (bucket_id = 'materiais');
+CREATE POLICY "materiais_admin_insert" ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = 'materiais' AND public.has_role(auth.uid(), 'admin'));
+CREATE POLICY "materiais_admin_update" ON storage.objects FOR UPDATE TO authenticated USING (bucket_id = 'materiais' AND public.has_role(auth.uid(), 'admin')) WITH CHECK (bucket_id = 'materiais' AND public.has_role(auth.uid(), 'admin'));
+CREATE POLICY "materiais_admin_delete" ON storage.objects FOR DELETE TO authenticated USING (bucket_id = 'materiais' AND public.has_role(auth.uid(), 'admin'));
