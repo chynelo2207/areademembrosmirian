@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { useRef, useState } from "react";
+import { Loader2, Pencil, Plus, Trash2, Upload } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,15 +23,18 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { uploadMaterialFile } from "@/lib/admin";
 
 export type Field = {
   name: string;
   label: string;
-  type: "text" | "textarea" | "number" | "switch" | "select";
+  type: "text" | "textarea" | "number" | "switch" | "select" | "file";
   options?: { value: string; label: string }[];
   placeholder?: string;
   required?: boolean;
+  accept?: string;
 };
+
 
 export type CrudItem = { id: string } & Record<string, unknown>;
 
