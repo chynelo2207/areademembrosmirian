@@ -56,3 +56,19 @@ export async function deleteRow(table: Table, id: string) {
   const { error } = await supabase.from(table).delete().eq("id", id);
   if (error) throw error;
 }
+
+/** Envia um arquivo (PDF ou imagem) para o bucket de materiais e devolve a referência salva no banco. */
+export async function uploadMaterialFile(file: File): Promise<string> {
+  const safeName = file.name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9.\-_]/g, "-")
+    .toLowerCase();
+  const path = `${Date.now()}-${safeName}`;
+  const { error } = await supabase.storage.from("materiais").upload(path, file, {
+    upsert: false,
+    contentType: file.type || undefined,
+  });
+  if (error) throw error;
+  return `storage:${path}`;
+}
