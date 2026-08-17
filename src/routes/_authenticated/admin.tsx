@@ -162,13 +162,14 @@ function AdminPage() {
             fields={[
               { name: "title", label: "Título", type: "text", required: true },
               { name: "description", label: "Descrição", type: "textarea" },
-              { name: "file_url", label: "Link do arquivo", type: "text" },
+              { name: "file_url", label: "Arquivo (PDF ou imagem)", type: "file" },
               {
                 name: "kind",
                 label: "Tipo",
                 type: "select",
                 options: [
                   { value: "pdf", label: "PDF" },
+                  { value: "imagem", label: "Imagem" },
                   { value: "molde", label: "Molde" },
                   { value: "link", label: "Link" },
                   { value: "video", label: "Vídeo" },

@@ -1,10 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Download, FileText, Table } from "lucide-react";
+import { Download, FileText, Image as ImageIcon, Table } from "lucide-react";
+import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMaterials, useModules } from "@/hooks/useMembersData";
+import { resolveMaterialUrl } from "@/lib/members";
+
+async function openMaterial(fileUrl: string) {
+  try {
+    const url = await resolveMaterialUrl(fileUrl);
+    window.open(url, "_blank", "noopener,noreferrer");
+  } catch (error) {
+    toast.error(error instanceof Error ? error.message : "Não foi possível abrir o arquivo");
+  }
+}
+
 
 export const Route = createFileRoute("/_authenticated/materiais")({
   head: () => ({
@@ -39,7 +51,10 @@ function MaterialsPage() {
             ))
           : (materials.data ?? []).map((material) => {
               const module = modules.data?.find((item) => item.id === material.module_id);
-              const Icon = material.kind === "planilha" ? Table : FileText;
+              const isImage =
+                material.kind === "imagem" ||
+                /\.(png|jpe?g|webp|gif|avif)$/i.test(material.file_url ?? "");
+              const Icon = isImage ? ImageIcon : material.kind === "planilha" ? Table : FileText;
               return (
                 <div
                   key={material.id}
@@ -60,10 +75,11 @@ function MaterialsPage() {
                     )}
                   </div>
                   {material.file_url ? (
-                    <Button asChild variant="outline">
-                      <a href={material.file_url} target="_blank" rel="noopener noreferrer">
-                        <Download className="mr-2 h-4 w-4" /> Baixar
-                      </a>
+                    <Button
+                      variant="outline"
+                      onClick={() => void openMaterial(material.file_url as string)}
+                    >
+                      <Download className="mr-2 h-4 w-4" /> {isImage ? "Abrir" : "Baixar"}
                     </Button>
                   ) : (
                     <Badge variant="secondary">Em publicação</Badge>

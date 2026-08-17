@@ -143,3 +143,14 @@ export function modulePercent(
     percent: items.length === 0 ? 0 : Math.round((done / items.length) * 100),
   };
 }
+
+/** Resolve links de materiais: arquivos enviados no painel viram link temporário assinado. */
+export async function resolveMaterialUrl(value: string): Promise<string> {
+  if (!value.startsWith("storage:")) return value;
+  const path = value.slice("storage:".length);
+  const { data, error } = await supabase.storage
+    .from("materiais")
+    .createSignedUrl(path, 60 * 60);
+  if (error || !data) throw error ?? new Error("Não foi possível abrir o arquivo");
+  return data.signedUrl;
+}
