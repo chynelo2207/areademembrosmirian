@@ -67,7 +67,7 @@ export async function uploadMaterialFile(file: File): Promise<string> {
   const path = `${Date.now()}-${safeName}`;
   const { error } = await supabase.storage.from("materiais").upload(path, file, {
     upsert: false,
-    contentType: file.type || undefined,
+    contentType: file.type || "application/octet-stream",
   });
   if (error) throw error;
   return `storage:${path}`;
