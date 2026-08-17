@@ -169,6 +169,7 @@ function AdminPage() {
                 type: "select",
                 options: [
                   { value: "pdf", label: "PDF" },
+                  { value: "imagem", label: "Imagem" },
                   { value: "molde", label: "Molde" },
                   { value: "link", label: "Link" },
                   { value: "video", label: "Vídeo" },
