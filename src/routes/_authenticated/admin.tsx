@@ -2,6 +2,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 
 import { CrudSection } from "@/components/admin/CrudSection";
 import { SettingsSection } from "@/components/admin/SettingsSection";
+import { UsersSection } from "@/components/admin/UsersSection";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDeleteRow, useOffers, useSaveRow } from "@/hooks/useAdminData";
 import {
@@ -78,6 +79,7 @@ function AdminPage() {
           <TabsTrigger value="recados">Recados</TabsTrigger>
           <TabsTrigger value="ofertas">Ofertas</TabsTrigger>
           <TabsTrigger value="acessos">Acessos</TabsTrigger>
+          <TabsTrigger value="usuarios">Alunos e admins</TabsTrigger>
           <TabsTrigger value="ajustes">Ajustes</TabsTrigger>
         </TabsList>
 
@@ -263,6 +265,10 @@ function AdminPage() {
             onSave={(values, id) => saveGrant.mutate({ values, id })}
             onDelete={(id) => deleteGrant.mutate(id)}
           />
+        </TabsContent>
+
+        <TabsContent value="usuarios" className="mt-4">
+          <UsersSection />
         </TabsContent>
 
         <TabsContent value="ajustes" className="mt-4">

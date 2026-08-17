@@ -64,9 +64,15 @@ export const Route = createFileRoute("/api/public/cakto")({
       POST: async ({ request }) => {
         const secret = process.env["CAKTO_WEBHOOK_SECRET"];
         const url = new URL(request.url);
-        const provided =
-          request.headers.get("x-webhook-secret") ?? url.searchParams.get("secret") ?? "";
-        if (!secret || provided !== secret) {
+        const candidates = [
+          request.headers.get("x-webhook-secret"),
+          request.headers.get("x-cakto-secret"),
+          request.headers.get("x-cakto-signature"),
+          request.headers.get("secret"),
+          request.headers.get("authorization")?.replace(/^Bearer\s+/i, ""),
+          url.searchParams.get("secret"),
+        ].filter((item): item is string => typeof item === "string" && item.length > 0);
+        if (!secret || !candidates.includes(secret)) {
           return new Response("Invalid secret", { status: 401 });
         }
 
