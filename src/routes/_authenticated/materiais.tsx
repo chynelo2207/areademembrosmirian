@@ -1,10 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Download, FileText, Table } from "lucide-react";
+import { Download, FileText, Image as ImageIcon, Table } from "lucide-react";
+import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMaterials, useModules } from "@/hooks/useMembersData";
+import { resolveMaterialUrl } from "@/lib/members";
+
+async function openMaterial(fileUrl: string) {
+  try {
+    const url = await resolveMaterialUrl(fileUrl);
+    window.open(url, "_blank", "noopener,noreferrer");
+  } catch (error) {
+    toast.error(error instanceof Error ? error.message : "Não foi possível abrir o arquivo");
+  }
+}
+
 
 export const Route = createFileRoute("/_authenticated/materiais")({
   head: () => ({
