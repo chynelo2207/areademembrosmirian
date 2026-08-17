@@ -75,6 +75,9 @@ export function CrudSection({
   const [open, setOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | undefined>(undefined);
   const [values, setValues] = useState<Record<string, unknown>>(() => emptyValues(fields));
+  const [uploading, setUploading] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
 
   function startCreate() {
     setEditingId(undefined);
