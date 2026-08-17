@@ -2,6 +2,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 
 import { CrudSection } from "@/components/admin/CrudSection";
 import { SettingsSection } from "@/components/admin/SettingsSection";
+import { UsersSection } from "@/components/admin/UsersSection";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDeleteRow, useOffers, useSaveRow } from "@/hooks/useAdminData";
 import {
