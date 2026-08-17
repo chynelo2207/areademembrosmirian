@@ -86,9 +86,6 @@ function MaterialsPage() {
                   )}
                 </div>
               );
-
-                </div>
-              );
             })}
       </div>
     </div>
