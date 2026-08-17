@@ -79,6 +79,7 @@ function AdminPage() {
           <TabsTrigger value="recados">Recados</TabsTrigger>
           <TabsTrigger value="ofertas">Ofertas</TabsTrigger>
           <TabsTrigger value="acessos">Acessos</TabsTrigger>
+          <TabsTrigger value="usuarios">Alunos e admins</TabsTrigger>
           <TabsTrigger value="ajustes">Ajustes</TabsTrigger>
         </TabsList>
 
