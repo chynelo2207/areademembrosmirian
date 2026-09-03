@@ -24,31 +24,8 @@ export default defineConfig({
         filename: "sw.js",
         // O build do TanStack Start emite os arquivos do cliente em dist/client.
         outDir: "dist/client",
-        manifest: {
-          name: "Área de Membros — Método Mirian Serrano",
-          short_name: "Método Mirian",
-          description:
-            "Aulas, moldes e materiais do Curso Corset ou Corselet Noiva e Moda Festa.",
-          lang: "pt-BR",
-          dir: "ltr",
-          start_url: "/inicio",
-          scope: "/",
-          display: "standalone",
-          orientation: "portrait-primary",
-          background_color: "#fdfbf8",
-          theme_color: "#521e15",
-          categories: ["education"],
-          icons: [
-            { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
-            { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
-            {
-              src: "/icons/maskable-512.png",
-              sizes: "512x512",
-              type: "image/png",
-              purpose: "maskable",
-            },
-          ],
-        },
+        // O manifest é estático em public/manifest.webmanifest (funciona também em dev).
+        manifest: false,
         workbox: {
           // Only hashed static build output is precached — never user data or HTML.
           globPatterns: ["**/*.{js,css,woff,woff2}"],
