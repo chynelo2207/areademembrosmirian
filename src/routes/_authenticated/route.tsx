@@ -5,6 +5,8 @@ import { useEffect } from "react";
 
 import { AccessGate } from "@/components/members/AccessGate";
 import { AppSidebar } from "@/components/members/AppSidebar";
+import { InstallPrompt } from "@/components/members/InstallPrompt";
+import { MobileNav } from "@/components/members/MobileNav";
 import { Button } from "@/components/ui/button";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { supabase } from "@/integrations/supabase/client";
@@ -51,7 +53,10 @@ function MembersLayout() {
       <div className="flex min-h-screen w-full bg-background">
         <AppSidebar />
         <div className="flex flex-1 flex-col">
-          <header className="flex h-14 items-center justify-between gap-3 border-b border-border bg-card px-3 sm:px-5">
+          <header
+            className="sticky top-0 z-30 flex h-14 items-center justify-between gap-3 border-b border-border bg-card/95 px-3 backdrop-blur sm:px-5"
+            style={{ paddingTop: "env(safe-area-inset-top)" }}
+          >
             <div className="flex items-center gap-2">
               <SidebarTrigger />
               <span className="hidden text-sm text-muted-foreground sm:inline">
@@ -68,9 +73,11 @@ function MembersLayout() {
               </Button>
             </div>
           </header>
-          <main className="flex-1 px-4 py-8 sm:px-8">
+          <main className="flex-1 px-4 pb-24 pt-6 sm:px-8 sm:py-8 md:pb-8">
             <Outlet />
           </main>
+          <MobileNav />
+          <InstallPrompt />
         </div>
       </div>
     </SidebarProvider>
