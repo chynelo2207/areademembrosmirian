@@ -22,6 +22,8 @@ export default defineConfig({
         // Never emit or register a service worker in dev / Lovable preview.
         devOptions: { enabled: false },
         filename: "sw.js",
+        // O build do TanStack Start emite os arquivos do cliente em dist/client.
+        outDir: "dist/client",
         manifest: {
           name: "Área de Membros — Método Mirian Serrano",
           short_name: "Método Mirian",
