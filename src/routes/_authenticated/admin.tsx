@@ -63,14 +63,10 @@ function AdminPage() {
   }));
   const moduleTitle = (id: string | null) =>
     moduleOptions.find((option) => option.value === id)?.label ?? "Sem módulo";
-  const materialAccess = (id: string | null) => {
-    if (!id) return "visível para todos os alunos";
-    const module = (modules.data ?? []).find((item) => item.id === id);
-    if (!module) return "sem módulo";
-    return module.required_plan === "classico"
-      ? "liberado no plano clássico e no completo"
-      : "somente plano completo";
-  };
+  const materialAccess = (plan: string | null) =>
+    plan === "completo"
+      ? "somente curso completo"
+      : "clássico e completo";
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -163,7 +159,7 @@ function AdminPage() {
         <TabsContent value="materiais" className="mt-4">
           <CrudSection
             title="Materiais"
-            description="Envie PDFs, moldes e imagens. Ao escolher um módulo, o arquivo segue a regra de acesso dele: no módulo clássico quem comprou o clássico também recebe; em módulos do completo só quem tem o completo vê. Sem módulo, todas as alunas veem."
+            description="Envie PDFs, moldes e imagens e escolha o curso que libera o arquivo: no Clássico todas as alunas baixam; no Completo só quem comprou o curso completo vê."
             addLabel="Novo material"
             isLoading={materials.isLoading}
             items={materials.data ?? []}
@@ -184,16 +180,20 @@ function AdminPage() {
                 ],
               },
               {
-                name: "module_id",
-                label: "Módulo que libera o arquivo (opcional)",
+                name: "required_plan",
+                label: "Curso que libera o arquivo",
                 type: "select",
-                options: moduleOptions,
+                required: true,
+                options: [
+                  { value: "classico", label: "Clássico (todas as alunas)" },
+                  { value: "completo", label: "Somente Completo" },
+                ],
               },
               { name: "position", label: "Ordem", type: "number" },
             ]}
             renderTitle={(item) => String(item["title"])}
             renderSubtitle={(item) =>
-              `${String(item["kind"] ?? "")} · ${materialAccess((item["module_id"] as string | null) ?? null)}`
+              `${String(item["kind"] ?? "")} · ${materialAccess((item["required_plan"] as string | null) ?? null)}`
             }
             onSave={(values, id) => saveMaterial.mutate({ values, id })}
             onDelete={(id) => deleteMaterial.mutate(id)}

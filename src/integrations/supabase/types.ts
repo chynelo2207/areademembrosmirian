@@ -168,6 +168,7 @@ export type Database = {
           kind: string
           module_id: string | null
           position: number
+          required_plan: Database["public"]["Enums"]["access_plan"]
           title: string
         }
         Insert: {
@@ -178,6 +179,7 @@ export type Database = {
           kind?: string
           module_id?: string | null
           position?: number
+          required_plan?: Database["public"]["Enums"]["access_plan"]
           title: string
         }
         Update: {
@@ -188,6 +190,7 @@ export type Database = {
           kind?: string
           module_id?: string | null
           position?: number
+          required_plan?: Database["public"]["Enums"]["access_plan"]
           title?: string
         }
         Relationships: [

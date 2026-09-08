@@ -28,6 +28,7 @@ export type MaterialRow = {
   file_url: string | null;
   kind: string;
   position: number;
+  required_plan: "classico" | "completo";
 };
 
 export type AnnouncementRow = {
@@ -66,7 +67,7 @@ export async function fetchProgress(): Promise<string[]> {
 export async function fetchMaterials(): Promise<MaterialRow[]> {
   const { data, error } = await supabase
     .from("materials")
-    .select("id, module_id, title, description, file_url, kind, position")
+    .select("id, module_id, title, description, file_url, kind, position, required_plan")
     .order("position", { ascending: true });
   if (error) throw error;
   return data ?? [];
