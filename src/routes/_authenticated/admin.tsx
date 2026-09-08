@@ -163,7 +163,7 @@ function AdminPage() {
         <TabsContent value="materiais" className="mt-4">
           <CrudSection
             title="Materiais"
-            description="Moldes, PDFs e arquivos para download das alunas."
+            description="Envie PDFs, moldes e imagens. Ao escolher um módulo, o arquivo segue a regra de acesso dele: no módulo clássico quem comprou o clássico também recebe; em módulos do completo só quem tem o completo vê. Sem módulo, todas as alunas veem."
             addLabel="Novo material"
             isLoading={materials.isLoading}
             items={materials.data ?? []}
