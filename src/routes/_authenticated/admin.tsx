@@ -192,7 +192,9 @@ function AdminPage() {
               { name: "position", label: "Ordem", type: "number" },
             ]}
             renderTitle={(item) => String(item["title"])}
-            renderSubtitle={(item) => String(item["kind"] ?? "")}
+            renderSubtitle={(item) =>
+              `${String(item["kind"] ?? "")} · ${materialAccess((item["module_id"] as string | null) ?? null)}`
+            }
             onSave={(values, id) => saveMaterial.mutate({ values, id })}
             onDelete={(id) => deleteMaterial.mutate(id)}
           />
