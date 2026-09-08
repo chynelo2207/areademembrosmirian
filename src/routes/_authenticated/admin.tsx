@@ -185,7 +185,7 @@ function AdminPage() {
               },
               {
                 name: "module_id",
-                label: "Módulo (opcional)",
+                label: "Módulo que libera o arquivo (opcional)",
                 type: "select",
                 options: moduleOptions,
               },
