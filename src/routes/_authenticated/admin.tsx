@@ -59,10 +59,18 @@ function AdminPage() {
 
   const moduleOptions = (modules.data ?? []).map((item) => ({
     value: item.id,
-    label: item.title,
+    label: `${item.title} — ${item.required_plan === "classico" ? "clássico" : "completo"}`,
   }));
   const moduleTitle = (id: string | null) =>
     moduleOptions.find((option) => option.value === id)?.label ?? "Sem módulo";
+  const materialAccess = (id: string | null) => {
+    if (!id) return "visível para todos os alunos";
+    const module = (modules.data ?? []).find((item) => item.id === id);
+    if (!module) return "sem módulo";
+    return module.required_plan === "classico"
+      ? "liberado no plano clássico e no completo"
+      : "somente plano completo";
+  };
 
   return (
     <div className="mx-auto max-w-4xl">
