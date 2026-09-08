@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useMaterials, useModules } from "@/hooks/useMembersData";
+import { useMaterials } from "@/hooks/useMembersData";
 import { resolveMaterialUrl } from "@/lib/members";
 
 async function openMaterial(fileUrl: string) {
@@ -35,7 +35,6 @@ export const Route = createFileRoute("/_authenticated/materiais")({
 
 function MaterialsPage() {
   const materials = useMaterials();
-  const modules = useModules();
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -50,7 +49,7 @@ function MaterialsPage() {
               <Skeleton key={index} className="h-20 w-full" />
             ))
           : (materials.data ?? []).map((material) => {
-              const module = modules.data?.find((item) => item.id === material.module_id);
+              const isCompleto = material.required_plan === "completo";
               const isImage =
                 material.kind === "imagem" ||
                 /\.(png|jpe?g|webp|gif|avif)$/i.test(material.file_url ?? "");
@@ -68,11 +67,9 @@ function MaterialsPage() {
                     {material.description && (
                       <p className="text-sm text-muted-foreground">{material.description}</p>
                     )}
-                    {module && (
-                      <Badge variant="secondary" className="mt-2">
-                        Módulo {module.position}
-                      </Badge>
-                    )}
+                    <Badge variant="secondary" className="mt-2">
+                      {isCompleto ? "Curso completo" : "Clássico e completo"}
+                    </Badge>
                   </div>
                   {material.file_url ? (
                     <Button
