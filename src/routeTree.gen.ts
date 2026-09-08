@@ -24,6 +24,7 @@ import { Route as AuthenticatedAulaLessonIdRouteImport } from './routes/_authent
 import { Route as AuthenticatedModulosIndexRouteImport } from './routes/_authenticated/modulos.index'
 import { Route as AuthenticatedModulosModuleIdRouteImport } from './routes/_authenticated/modulos.$moduleId'
 import { Route as ApiPublicCaktoRouteImport } from './routes/api/public/cakto'
+import { Route as ApiPublicLiberarAcessoRouteImport } from './routes/api/public/liberar-acesso'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -102,6 +103,11 @@ const ApiPublicCaktoRoute = ApiPublicCaktoRouteImport.update({
   path: '/api/public/cakto',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicLiberarAcessoRoute = ApiPublicLiberarAcessoRouteImport.update({
+  id: '/api/public/liberar-acesso',
+  path: '/api/public/liberar-acesso',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/aula/$lessonId': typeof AuthenticatedAulaLessonIdRoute
   '/modulos/$moduleId': typeof AuthenticatedModulosModuleIdRoute
   '/api/public/cakto': typeof ApiPublicCaktoRoute
+  '/api/public/liberar-acesso': typeof ApiPublicLiberarAcessoRoute
   '/modulos/': typeof AuthenticatedModulosIndexRoute
 }
 export interface FileRoutesByTo {
@@ -133,6 +140,7 @@ export interface FileRoutesByTo {
   '/aula/$lessonId': typeof AuthenticatedAulaLessonIdRoute
   '/modulos/$moduleId': typeof AuthenticatedModulosModuleIdRoute
   '/api/public/cakto': typeof ApiPublicCaktoRoute
+  '/api/public/liberar-acesso': typeof ApiPublicLiberarAcessoRoute
   '/modulos': typeof AuthenticatedModulosIndexRoute
 }
 export interface FileRoutesById {
@@ -151,6 +159,7 @@ export interface FileRoutesById {
   '/_authenticated/aula/$lessonId': typeof AuthenticatedAulaLessonIdRoute
   '/_authenticated/modulos/$moduleId': typeof AuthenticatedModulosModuleIdRoute
   '/api/public/cakto': typeof ApiPublicCaktoRoute
+  '/api/public/liberar-acesso': typeof ApiPublicLiberarAcessoRoute
   '/_authenticated/modulos/': typeof AuthenticatedModulosIndexRoute
 }
 export interface FileRouteTypes {
@@ -169,6 +178,7 @@ export interface FileRouteTypes {
     | '/aula/$lessonId'
     | '/modulos/$moduleId'
     | '/api/public/cakto'
+    | '/api/public/liberar-acesso'
     | '/modulos/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -185,6 +195,7 @@ export interface FileRouteTypes {
     | '/aula/$lessonId'
     | '/modulos/$moduleId'
     | '/api/public/cakto'
+    | '/api/public/liberar-acesso'
     | '/modulos'
   id:
     | '__root__'
@@ -202,6 +213,7 @@ export interface FileRouteTypes {
     | '/_authenticated/aula/$lessonId'
     | '/_authenticated/modulos/$moduleId'
     | '/api/public/cakto'
+    | '/api/public/liberar-acesso'
     | '/_authenticated/modulos/'
   fileRoutesById: FileRoutesById
 }
@@ -211,6 +223,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   ApiPublicCaktoRoute: typeof ApiPublicCaktoRoute
+  ApiPublicLiberarAcessoRoute: typeof ApiPublicLiberarAcessoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -320,6 +333,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicCaktoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/liberar-acesso': {
+      id: '/api/public/liberar-acesso'
+      path: '/api/public/liberar-acesso'
+      fullPath: '/api/public/liberar-acesso'
+      preLoaderRoute: typeof ApiPublicLiberarAcessoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -358,6 +378,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   ApiPublicCaktoRoute: ApiPublicCaktoRoute,
+  ApiPublicLiberarAcessoRoute: ApiPublicLiberarAcessoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
