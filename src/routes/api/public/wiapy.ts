@@ -80,7 +80,15 @@ export const Route = createFileRoute("/api/public/wiapy")({
         ]);
 
         const status = (
-          firstString(payload, [["status"], ["data", "status"], ["event"], ["type"], ["data", "event"]]) ?? ""
+          firstString(payload, [
+            ["payment", "status"],
+            ["data", "payment", "status"],
+            ["status"],
+            ["data", "status"],
+            ["event"],
+            ["type"],
+            ["data", "event"],
+          ]) ?? ""
         ).toLowerCase();
 
         const checkoutId = firstString(payload, [
