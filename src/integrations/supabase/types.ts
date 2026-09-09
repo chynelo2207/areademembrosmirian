@@ -305,6 +305,48 @@ export type Database = {
         }
         Relationships: []
       }
+      purchases: {
+        Row: {
+          buyer_name: string | null
+          checkout_id: string | null
+          created_at: string
+          email: string
+          id: string
+          plan: Database["public"]["Enums"]["access_plan"]
+          provider: string
+          raw: Json | null
+          status: string
+          transaction_id: string
+          updated_at: string
+        }
+        Insert: {
+          buyer_name?: string | null
+          checkout_id?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          plan: Database["public"]["Enums"]["access_plan"]
+          provider?: string
+          raw?: Json | null
+          status?: string
+          transaction_id: string
+          updated_at?: string
+        }
+        Update: {
+          buyer_name?: string | null
+          checkout_id?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          plan?: Database["public"]["Enums"]["access_plan"]
+          provider?: string
+          raw?: Json | null
+          status?: string
+          transaction_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
