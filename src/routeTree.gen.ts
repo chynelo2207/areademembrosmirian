@@ -25,6 +25,7 @@ import { Route as AuthenticatedModulosIndexRouteImport } from './routes/_authent
 import { Route as AuthenticatedModulosModuleIdRouteImport } from './routes/_authenticated/modulos.$moduleId'
 import { Route as ApiPublicCaktoRouteImport } from './routes/api/public/cakto'
 import { Route as ApiPublicLiberarAcessoRouteImport } from './routes/api/public/liberar-acesso'
+import { Route as ApiPublicWiapyRouteImport } from './routes/api/public/wiapy'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -108,6 +109,11 @@ const ApiPublicLiberarAcessoRoute = ApiPublicLiberarAcessoRouteImport.update({
   path: '/api/public/liberar-acesso',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicWiapyRoute = ApiPublicWiapyRouteImport.update({
+  id: '/api/public/wiapy',
+  path: '/api/public/wiapy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -124,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/modulos/$moduleId': typeof AuthenticatedModulosModuleIdRoute
   '/api/public/cakto': typeof ApiPublicCaktoRoute
   '/api/public/liberar-acesso': typeof ApiPublicLiberarAcessoRoute
+  '/api/public/wiapy': typeof ApiPublicWiapyRoute
   '/modulos/': typeof AuthenticatedModulosIndexRoute
 }
 export interface FileRoutesByTo {
@@ -141,6 +148,7 @@ export interface FileRoutesByTo {
   '/modulos/$moduleId': typeof AuthenticatedModulosModuleIdRoute
   '/api/public/cakto': typeof ApiPublicCaktoRoute
   '/api/public/liberar-acesso': typeof ApiPublicLiberarAcessoRoute
+  '/api/public/wiapy': typeof ApiPublicWiapyRoute
   '/modulos': typeof AuthenticatedModulosIndexRoute
 }
 export interface FileRoutesById {
@@ -160,6 +168,7 @@ export interface FileRoutesById {
   '/_authenticated/modulos/$moduleId': typeof AuthenticatedModulosModuleIdRoute
   '/api/public/cakto': typeof ApiPublicCaktoRoute
   '/api/public/liberar-acesso': typeof ApiPublicLiberarAcessoRoute
+  '/api/public/wiapy': typeof ApiPublicWiapyRoute
   '/_authenticated/modulos/': typeof AuthenticatedModulosIndexRoute
 }
 export interface FileRouteTypes {
@@ -179,6 +188,7 @@ export interface FileRouteTypes {
     | '/modulos/$moduleId'
     | '/api/public/cakto'
     | '/api/public/liberar-acesso'
+    | '/api/public/wiapy'
     | '/modulos/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -196,6 +206,7 @@ export interface FileRouteTypes {
     | '/modulos/$moduleId'
     | '/api/public/cakto'
     | '/api/public/liberar-acesso'
+    | '/api/public/wiapy'
     | '/modulos'
   id:
     | '__root__'
@@ -214,6 +225,7 @@ export interface FileRouteTypes {
     | '/_authenticated/modulos/$moduleId'
     | '/api/public/cakto'
     | '/api/public/liberar-acesso'
+    | '/api/public/wiapy'
     | '/_authenticated/modulos/'
   fileRoutesById: FileRoutesById
 }
@@ -224,6 +236,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   ApiPublicCaktoRoute: typeof ApiPublicCaktoRoute
   ApiPublicLiberarAcessoRoute: typeof ApiPublicLiberarAcessoRoute
+  ApiPublicWiapyRoute: typeof ApiPublicWiapyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -340,6 +353,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicLiberarAcessoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/wiapy': {
+      id: '/api/public/wiapy'
+      path: '/api/public/wiapy'
+      fullPath: '/api/public/wiapy'
+      preLoaderRoute: typeof ApiPublicWiapyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -379,6 +399,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   ApiPublicCaktoRoute: ApiPublicCaktoRoute,
   ApiPublicLiberarAcessoRoute: ApiPublicLiberarAcessoRoute,
+  ApiPublicWiapyRoute: ApiPublicWiapyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
