@@ -49,6 +49,10 @@ type Props = {
   renderSubtitle?: (item: CrudItem) => string;
   onSave: (values: Record<string, unknown>, id?: string) => void;
   onDelete: (id: string) => void;
+  /** Mostra uma barra de pesquisa que filtra pelo título e pelo subtítulo dos itens. */
+  searchPlaceholder?: string;
+  /** Conteúdo extra exibido no topo da lista (ex.: resumo de acessos do dia). */
+  stats?: React.ReactNode;
 };
 
 function emptyValues(fields: Field[]): Record<string, unknown> {
