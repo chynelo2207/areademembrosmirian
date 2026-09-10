@@ -1,14 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronRight, Clock, Crown, Lock } from "lucide-react";
+import { ChevronRight, Clock, Crown, ExternalLink, Lock } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLessons, useModules, useProgress } from "@/hooks/useMembersData";
 import { modulePercent } from "@/lib/members";
-import { canOpenModule } from "@/lib/access";
-import { useMyPlan } from "@/hooks/useAccess";
+import { canOpenModule, DEFAULT_UPGRADE_URL } from "@/lib/access";
+import { useMyPlan, useSettings } from "@/hooks/useAccess";
 
 export const Route = createFileRoute("/_authenticated/modulos/")({
   head: () => ({
