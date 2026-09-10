@@ -149,6 +149,33 @@ function HomePage() {
         </Link>
       </section>
 
+      {showUpgrade && (
+        <section>
+          <Card className="overflow-hidden border-gold/60 bg-accent">
+            <div className="grid sm:grid-cols-[1fr_auto]">
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <Crown className="h-5 w-5 text-gold" />
+                  <CardTitle className="font-serif text-xl">Libere o curso completo</CardTitle>
+                </div>
+                <p className="mt-2 max-w-xl text-sm text-muted-foreground">
+                  Você está no plano Clássico. Faça o upgrade para desbloquear todos os módulos,
+                  aulas avançadas e materiais exclusivos por apenas{" "}
+                  <strong className="text-foreground">{upgradePrice}</strong>.
+                </p>
+              </CardHeader>
+              <CardContent className="flex items-center sm:justify-end">
+                <Button asChild>
+                  <a href={upgradeUrl} target="_blank" rel="noopener noreferrer">
+                    Fazer upgrade <ExternalLink className="ml-2 h-4 w-4" />
+                  </a>
+                </Button>
+              </CardContent>
+            </div>
+          </Card>
+        </section>
+      )}
+
       <section>
         <div className="flex items-center justify-between">
           <h2 className="font-serif text-2xl text-primary">Avisos</h2>
