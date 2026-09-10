@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, BookOpen, Download, Megaphone, PlayCircle } from "lucide-react";
+import { ArrowRight, BookOpen, Crown, Download, ExternalLink, Megaphone, PlayCircle } from "lucide-react";
 
 import heroImage from "@/assets/members-hero.jpg";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useMyPlan, useSettings } from "@/hooks/useAccess";
 import {
   useAnnouncements,
   useCurrentUser,
@@ -13,6 +14,7 @@ import {
   useModules,
   useProgress,
 } from "@/hooks/useMembersData";
+import { DEFAULT_UPGRADE_URL } from "@/lib/access";
 
 export const Route = createFileRoute("/_authenticated/inicio")({
   head: () => ({
