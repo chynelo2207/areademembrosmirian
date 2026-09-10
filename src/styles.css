@@ -151,3 +151,8 @@
     font-family: var(--font-serif);
   }
 }
+
+/* Esconde o badge "Edit with Lovable" na área de membros publicada. */
+#lovable-badge {
+  display: none !important;
+}
