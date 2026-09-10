@@ -110,7 +110,8 @@ function ModulesPage() {
                     )}
                     {!module.coming_soon && !unlocked && (
                       <p className="mt-4 text-xs text-muted-foreground">
-                        Este módulo faz parte do curso completo. Libere pagando apenas a diferença.
+                        Este módulo faz parte do curso completo. Clique e faça o upgrade por{" "}
+                        <strong className="text-foreground">{upgradePrice}</strong>.
                       </p>
                     )}
                     {!module.coming_soon && unlocked && (
