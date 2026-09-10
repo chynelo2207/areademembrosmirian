@@ -37,6 +37,11 @@ function HomePage() {
   const lessons = useLessons();
   const progress = useProgress();
   const announcements = useAnnouncements();
+  const plan = useMyPlan();
+  const settings = useSettings();
+  const upgradeUrl = settings.data?.["upgrade_url"] || DEFAULT_UPGRADE_URL;
+  const upgradePrice = settings.data?.["upgrade_price_label"] || "R$ 119,98";
+  const showUpgrade = plan.data === "classico";
 
   const firstName = (
     ((user?.user_metadata?.["full_name"] as string | undefined) ?? user?.email ?? "aluna").split(
