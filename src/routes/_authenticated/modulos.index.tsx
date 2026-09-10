@@ -1,14 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronRight, Clock, Crown, Lock } from "lucide-react";
+import { ChevronRight, Clock, Crown, ExternalLink, Lock } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLessons, useModules, useProgress } from "@/hooks/useMembersData";
 import { modulePercent } from "@/lib/members";
-import { canOpenModule } from "@/lib/access";
-import { useMyPlan } from "@/hooks/useAccess";
+import { canOpenModule, DEFAULT_UPGRADE_URL } from "@/lib/access";
+import { useMyPlan, useSettings } from "@/hooks/useAccess";
 
 export const Route = createFileRoute("/_authenticated/modulos/")({
   head: () => ({
@@ -31,6 +32,12 @@ function ModulesPage() {
   const lessons = useLessons();
   const progress = useProgress();
   const plan = useMyPlan();
+  const settings = useSettings();
+  const upgradeUrl = settings.data?.["upgrade_url"] || DEFAULT_UPGRADE_URL;
+  const upgradePrice = settings.data?.["upgrade_price_label"] || "R$ 119,98";
+  const isClassico = plan.data === "classico";
+
+  const lockedCount = (modules.data ?? []).filter((m) => m.required_plan === "completo" && !m.coming_soon).length;
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -38,6 +45,29 @@ function ModulesPage() {
       <p className="mt-2 text-sm text-muted-foreground">
         Conteúdo completo do curso, na ordem recomendada.
       </p>
+
+      {isClassico && lockedCount > 0 && (
+        <Card className="mt-6 border-gold/60 bg-accent">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Crown className="h-5 w-5 text-gold" />
+              <CardTitle className="font-serif text-xl">Desbloqueie todos os módulos</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Você tem acesso ao módulo inicial. Libere mais{" "}
+              <strong className="text-foreground">{lockedCount}</strong> módulos do curso completo
+              por <strong className="text-foreground">{upgradePrice}</strong>.
+            </p>
+            <Button asChild>
+              <a href={upgradeUrl} target="_blank" rel="noopener noreferrer">
+                Fazer upgrade agora <ExternalLink className="ml-2 h-4 w-4" />
+              </a>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="mt-8 space-y-3">
         {modules.isLoading || lessons.isLoading || progress.isLoading
@@ -80,7 +110,8 @@ function ModulesPage() {
                     )}
                     {!module.coming_soon && !unlocked && (
                       <p className="mt-4 text-xs text-muted-foreground">
-                        Este módulo faz parte do curso completo. Libere pagando apenas a diferença.
+                        Este módulo faz parte do curso completo. Clique e faça o upgrade por{" "}
+                        <strong className="text-foreground">{upgradePrice}</strong>.
                       </p>
                     )}
                     {!module.coming_soon && unlocked && (

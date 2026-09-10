@@ -7,8 +7,8 @@ import { Label } from "@/components/ui/label";
 import { useSaveSetting, useSettings } from "@/hooks/useAccess";
 
 const FIELDS = [
-  { key: "upgrade_url", label: "Link de upgrade (diferença de R$20)" },
-  { key: "upgrade_price_label", label: "Preço do upgrade" },
+  { key: "upgrade_url", label: "Link de upgrade para o completo" },
+  { key: "upgrade_price_label", label: "Preço do upgrade (ex: R$ 119,98)" },
   { key: "classic_price_label", label: "Preço do plano clássico" },
   { key: "complete_price_label", label: "Preço do plano completo" },
 ] as const;

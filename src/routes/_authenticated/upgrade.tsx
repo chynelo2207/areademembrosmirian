@@ -35,7 +35,7 @@ function UpgradePage() {
   const modules = useModules();
 
   const upgradeUrl = settings.data?.["upgrade_url"] || DEFAULT_UPGRADE_URL;
-  const upgradePrice = settings.data?.["upgrade_price_label"] || "R$ 20,00";
+  const upgradePrice = settings.data?.["upgrade_price_label"] || "R$ 119,98";
   const locked = (modules.data ?? []).filter((m) => m.required_plan === "completo");
   const alreadyComplete = plan.data === "completo" || plan.data === "admin";
 
@@ -43,8 +43,8 @@ function UpgradePage() {
     <div className="mx-auto max-w-2xl">
       <h1 className="font-serif text-3xl text-primary">Curso completo</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        No plano clássico você tem o módulo inicial. Para liberar todos os módulos, quem já está
-        aqui dentro paga apenas a diferença.
+        No plano clássico você tem o módulo inicial. Para liberar todos os módulos e materiais
+        exclusivos, quem já está aqui dentro faz o upgrade com valor especial.
       </p>
 
       <Card className="mt-6 border-gold/60 bg-accent">

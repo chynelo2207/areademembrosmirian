@@ -42,7 +42,7 @@ export async function saveSetting(key: string, value: string) {
   if (error) throw error;
 }
 
-export const DEFAULT_UPGRADE_URL = "https://pay.cakto.com.br/3dh9kbz";
+export const DEFAULT_UPGRADE_URL = "https://pay.wiapy.com/iWJwRQvGe-si";
 
 export function canOpenModule(plan: Plan, requiredPlan: "classico" | "completo") {
   if (plan === "admin" || plan === "completo") return true;

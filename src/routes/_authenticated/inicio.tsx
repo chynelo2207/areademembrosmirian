@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, BookOpen, Download, Megaphone, PlayCircle } from "lucide-react";
+import { ArrowRight, BookOpen, Crown, Download, ExternalLink, Megaphone, PlayCircle } from "lucide-react";
 
 import heroImage from "@/assets/members-hero.jpg";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useMyPlan, useSettings } from "@/hooks/useAccess";
 import {
   useAnnouncements,
   useCurrentUser,
@@ -13,6 +14,7 @@ import {
   useModules,
   useProgress,
 } from "@/hooks/useMembersData";
+import { DEFAULT_UPGRADE_URL } from "@/lib/access";
 
 export const Route = createFileRoute("/_authenticated/inicio")({
   head: () => ({
@@ -35,6 +37,11 @@ function HomePage() {
   const lessons = useLessons();
   const progress = useProgress();
   const announcements = useAnnouncements();
+  const plan = useMyPlan();
+  const settings = useSettings();
+  const upgradeUrl = settings.data?.["upgrade_url"] || DEFAULT_UPGRADE_URL;
+  const upgradePrice = settings.data?.["upgrade_price_label"] || "R$ 119,98";
+  const showUpgrade = plan.data === "classico";
 
   const firstName = (
     ((user?.user_metadata?.["full_name"] as string | undefined) ?? user?.email ?? "aluna").split(
@@ -141,6 +148,33 @@ function HomePage() {
           </Card>
         </Link>
       </section>
+
+      {showUpgrade && (
+        <section>
+          <Card className="overflow-hidden border-gold/60 bg-accent">
+            <div className="grid sm:grid-cols-[1fr_auto]">
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <Crown className="h-5 w-5 text-gold" />
+                  <CardTitle className="font-serif text-xl">Libere o curso completo</CardTitle>
+                </div>
+                <p className="mt-2 max-w-xl text-sm text-muted-foreground">
+                  Você está no plano Clássico. Faça o upgrade para desbloquear todos os módulos,
+                  aulas avançadas e materiais exclusivos por apenas{" "}
+                  <strong className="text-foreground">{upgradePrice}</strong>.
+                </p>
+              </CardHeader>
+              <CardContent className="flex items-center sm:justify-end">
+                <Button asChild>
+                  <a href={upgradeUrl} target="_blank" rel="noopener noreferrer">
+                    Fazer upgrade <ExternalLink className="ml-2 h-4 w-4" />
+                  </a>
+                </Button>
+              </CardContent>
+            </div>
+          </Card>
+        </section>
+      )}
 
       <section>
         <div className="flex items-center justify-between">
