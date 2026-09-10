@@ -32,6 +32,12 @@ function ModulesPage() {
   const lessons = useLessons();
   const progress = useProgress();
   const plan = useMyPlan();
+  const settings = useSettings();
+  const upgradeUrl = settings.data?.["upgrade_url"] || DEFAULT_UPGRADE_URL;
+  const upgradePrice = settings.data?.["upgrade_price_label"] || "R$ 119,98";
+  const isClassico = plan.data === "classico";
+
+  const lockedCount = (modules.data ?? []).filter((m) => m.required_plan === "completo" && !m.coming_soon).length;
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -39,6 +45,29 @@ function ModulesPage() {
       <p className="mt-2 text-sm text-muted-foreground">
         Conteúdo completo do curso, na ordem recomendada.
       </p>
+
+      {isClassico && lockedCount > 0 && (
+        <Card className="mt-6 border-gold/60 bg-accent">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Crown className="h-5 w-5 text-gold" />
+              <CardTitle className="font-serif text-xl">Desbloqueie todos os módulos</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Você tem acesso ao módulo inicial. Libere mais{" "}
+              <strong className="text-foreground">{lockedCount}</strong> módulos do curso completo
+              por <strong className="text-foreground">{upgradePrice}</strong>.
+            </p>
+            <Button asChild>
+              <a href={upgradeUrl} target="_blank" rel="noopener noreferrer">
+                Fazer upgrade agora <ExternalLink className="ml-2 h-4 w-4" />
+              </a>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="mt-8 space-y-3">
         {modules.isLoading || lessons.isLoading || progress.isLoading
