@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { KeyRound, ShieldCheck } from "lucide-react";
+import { useMemo, useState } from "react";
+import { KeyRound, Search, ShieldCheck } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
