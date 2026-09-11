@@ -75,12 +75,24 @@ export function CrudSection({
   renderSubtitle,
   onSave,
   onDelete,
+  searchPlaceholder,
+  stats,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | undefined>(undefined);
   const [values, setValues] = useState<Record<string, unknown>>(() => emptyValues(fields));
   const [uploading, setUploading] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const visibleItems = useMemo(() => {
+    const term = query.trim().toLowerCase();
+    if (!term) return items;
+    return items.filter((item) => {
+      const haystack = `${renderTitle(item)} ${renderSubtitle ? renderSubtitle(item) : ""}`;
+      return haystack.toLowerCase().includes(term);
+    });
+  }, [items, query, renderTitle, renderSubtitle]);
 
 
   function startCreate() {
