@@ -300,11 +300,26 @@ export function CrudSection({
         </Dialog>
       </CardHeader>
       <CardContent className="space-y-2">
+        {stats}
+        {searchPlaceholder && (
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              className="pl-9"
+              value={query}
+              placeholder={searchPlaceholder}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+          </div>
+        )}
         {isLoading && <p className="text-sm text-muted-foreground">Carregando…</p>}
         {!isLoading && items.length === 0 && (
           <p className="text-sm text-muted-foreground">Nada cadastrado ainda.</p>
         )}
-        {items.map((item) => (
+        {!isLoading && items.length > 0 && visibleItems.length === 0 && (
+          <p className="text-sm text-muted-foreground">Nenhum resultado para “{query}”.</p>
+        )}
+        {visibleItems.map((item) => (
           <div
             key={item.id}
             className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border px-3 py-2"
