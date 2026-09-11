@@ -109,7 +109,13 @@ function AdminPage() {
               { name: "title", label: "Título", type: "text", required: true },
               { name: "description", label: "Descrição", type: "textarea" },
               { name: "position", label: "Ordem", type: "number" },
-              { name: "cover_url", label: "Imagem de capa (URL)", type: "text" },
+              {
+                name: "cover_url",
+                label: "Imagem de capa do módulo",
+                type: "file",
+                accept: "image/*",
+                uploadLabel: "Enviar imagem de capa",
+              },
               {
                 name: "required_plan",
                 label: "Plano necessário",

@@ -33,6 +33,7 @@ export type Field = {
   placeholder?: string;
   required?: boolean;
   accept?: string;
+  uploadLabel?: string;
 };
 
 
@@ -250,7 +251,7 @@ export function CrudSection({
                           ) : (
                             <Upload className="mr-1.5 h-4 w-4" />
                           )}
-                          Enviar PDF ou imagem
+                          {field.uploadLabel ?? "Enviar PDF ou imagem"}
                         </Button>
                         {values[field.name] ? (
                           <span className="max-w-[16rem] truncate text-xs text-muted-foreground">
