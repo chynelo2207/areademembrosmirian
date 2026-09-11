@@ -139,8 +139,10 @@ export function UsersSection() {
               </div>
             </div>
           ))}
-          {!users.isLoading && (users.data ?? []).length === 0 && (
-            <p className="text-sm text-muted-foreground">Nenhuma conta criada ainda.</p>
+          {!users.isLoading && visibleUsers.length === 0 && (
+            <p className="text-sm text-muted-foreground">
+              {query.trim() ? `Nenhuma conta para “${query}”.` : "Nenhuma conta criada ainda."}
+            </p>
           )}
         </CardContent>
       </Card>
