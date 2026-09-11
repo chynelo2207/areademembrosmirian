@@ -63,6 +63,17 @@ function AdminPage() {
   }));
   const moduleTitle = (id: string | null) =>
     moduleOptions.find((option) => option.value === id)?.label ?? "Sem módulo";
+  const grantRows = grants.data ?? [];
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+  const startOfWeek = new Date(startOfToday.getTime() - 6 * 24 * 60 * 60 * 1000);
+  const grantsToday = grantRows.filter(
+    (row) => new Date(row.created_at).getTime() >= startOfToday.getTime(),
+  ).length;
+  const grantsWeek = grantRows.filter(
+    (row) => new Date(row.created_at).getTime() >= startOfWeek.getTime(),
+  ).length;
+
   const materialAccess = (plan: string | null) =>
     plan === "completo"
       ? "somente curso completo"
@@ -272,6 +283,23 @@ function AdminPage() {
             renderTitle={(item) => String(item["email"])}
             renderSubtitle={(item) =>
               `${item["plan"] === "completo" ? "Completo" : "Clássico"} · ${String(item["source"] ?? "manual")}`
+            }
+            searchPlaceholder="Pesquisar e-mail, plano ou origem…"
+            stats={
+              <div className="grid gap-2 sm:grid-cols-3">
+                <div className="rounded-md border border-border bg-muted/40 px-3 py-2">
+                  <p className="text-xs text-muted-foreground">Acessos novos hoje</p>
+                  <p className="font-serif text-2xl text-primary">{grantsToday}</p>
+                </div>
+                <div className="rounded-md border border-border bg-muted/40 px-3 py-2">
+                  <p className="text-xs text-muted-foreground">Últimos 7 dias</p>
+                  <p className="font-serif text-2xl text-primary">{grantsWeek}</p>
+                </div>
+                <div className="rounded-md border border-border bg-muted/40 px-3 py-2">
+                  <p className="text-xs text-muted-foreground">Total liberado</p>
+                  <p className="font-serif text-2xl text-primary">{(grants.data ?? []).length}</p>
+                </div>
+              </div>
             }
             onSave={(values, id) => saveGrant.mutate({ values, id })}
             onDelete={(id) => deleteGrant.mutate(id)}

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { KeyRound, ShieldCheck } from "lucide-react";
+import { useMemo, useState } from "react";
+import { KeyRound, Search, ShieldCheck } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,14 @@ export function UsersSection() {
   const [target, setTarget] = useState<{ id: string; email: string } | null>(null);
   const [newPassword, setNewPassword] = useState("");
   const [ownPassword, setOwnPassword] = useState("");
+  const [query, setQuery] = useState("");
+
+  const visibleUsers = useMemo(() => {
+    const rows = users.data ?? [];
+    const term = query.trim().toLowerCase();
+    if (!term) return rows;
+    return rows.filter((user) => user.email.toLowerCase().includes(term));
+  }, [users.data, query]);
 
   return (
     <div className="space-y-6">
@@ -70,11 +78,20 @@ export function UsersSection() {
           </p>
         </CardHeader>
         <CardContent className="space-y-2">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              className="pl-9"
+              value={query}
+              placeholder="Pesquisar por e-mail…"
+              onChange={(event) => setQuery(event.target.value)}
+            />
+          </div>
           {users.isLoading && <p className="text-sm text-muted-foreground">Carregando…</p>}
           {users.error && (
             <p className="text-sm text-destructive">{(users.error as Error).message}</p>
           )}
-          {(users.data ?? []).map((user) => (
+          {visibleUsers.map((user) => (
             <div
               key={user.id}
               className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-border px-3 py-2"
@@ -122,8 +139,10 @@ export function UsersSection() {
               </div>
             </div>
           ))}
-          {!users.isLoading && (users.data ?? []).length === 0 && (
-            <p className="text-sm text-muted-foreground">Nenhuma conta criada ainda.</p>
+          {!users.isLoading && visibleUsers.length === 0 && (
+            <p className="text-sm text-muted-foreground">
+              {query.trim() ? `Nenhuma conta para “${query}”.` : "Nenhuma conta criada ainda."}
+            </p>
           )}
         </CardContent>
       </Card>

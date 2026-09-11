@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { Loader2, Pencil, Plus, Trash2, Upload } from "lucide-react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
+import { Loader2, Pencil, Plus, Search, Trash2, Upload } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -52,7 +52,7 @@ type Props = {
   /** Mostra uma barra de pesquisa que filtra pelo título e pelo subtítulo dos itens. */
   searchPlaceholder?: string;
   /** Conteúdo extra exibido no topo da lista (ex.: resumo de acessos do dia). */
-  stats?: React.ReactNode;
+  stats?: ReactNode;
 };
 
 function emptyValues(fields: Field[]): Record<string, unknown> {
@@ -75,12 +75,24 @@ export function CrudSection({
   renderSubtitle,
   onSave,
   onDelete,
+  searchPlaceholder,
+  stats,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | undefined>(undefined);
   const [values, setValues] = useState<Record<string, unknown>>(() => emptyValues(fields));
   const [uploading, setUploading] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const visibleItems = useMemo(() => {
+    const term = query.trim().toLowerCase();
+    if (!term) return items;
+    return items.filter((item) => {
+      const haystack = `${renderTitle(item)} ${renderSubtitle ? renderSubtitle(item) : ""}`;
+      return haystack.toLowerCase().includes(term);
+    });
+  }, [items, query, renderTitle, renderSubtitle]);
 
 
   function startCreate() {
@@ -288,11 +300,26 @@ export function CrudSection({
         </Dialog>
       </CardHeader>
       <CardContent className="space-y-2">
+        {stats}
+        {searchPlaceholder && (
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              className="pl-9"
+              value={query}
+              placeholder={searchPlaceholder}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+          </div>
+        )}
         {isLoading && <p className="text-sm text-muted-foreground">Carregando…</p>}
         {!isLoading && items.length === 0 && (
           <p className="text-sm text-muted-foreground">Nada cadastrado ainda.</p>
         )}
-        {items.map((item) => (
+        {!isLoading && items.length > 0 && visibleItems.length === 0 && (
+          <p className="text-sm text-muted-foreground">Nenhum resultado para “{query}”.</p>
+        )}
+        {visibleItems.map((item) => (
           <div
             key={item.id}
             className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border px-3 py-2"
