@@ -273,6 +273,23 @@ function AdminPage() {
             renderSubtitle={(item) =>
               `${item["plan"] === "completo" ? "Completo" : "Clássico"} · ${String(item["source"] ?? "manual")}`
             }
+            searchPlaceholder="Pesquisar e-mail, plano ou origem…"
+            stats={
+              <div className="grid gap-2 sm:grid-cols-3">
+                <div className="rounded-md border border-border bg-muted/40 px-3 py-2">
+                  <p className="text-xs text-muted-foreground">Acessos novos hoje</p>
+                  <p className="font-serif text-2xl text-primary">{grantsToday}</p>
+                </div>
+                <div className="rounded-md border border-border bg-muted/40 px-3 py-2">
+                  <p className="text-xs text-muted-foreground">Últimos 7 dias</p>
+                  <p className="font-serif text-2xl text-primary">{grantsWeek}</p>
+                </div>
+                <div className="rounded-md border border-border bg-muted/40 px-3 py-2">
+                  <p className="text-xs text-muted-foreground">Total liberado</p>
+                  <p className="font-serif text-2xl text-primary">{(grants.data ?? []).length}</p>
+                </div>
+              </div>
+            }
             onSave={(values, id) => saveGrant.mutate({ values, id })}
             onDelete={(id) => deleteGrant.mutate(id)}
           />
