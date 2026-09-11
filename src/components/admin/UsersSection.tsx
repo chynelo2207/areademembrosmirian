@@ -30,6 +30,14 @@ export function UsersSection() {
   const [target, setTarget] = useState<{ id: string; email: string } | null>(null);
   const [newPassword, setNewPassword] = useState("");
   const [ownPassword, setOwnPassword] = useState("");
+  const [query, setQuery] = useState("");
+
+  const visibleUsers = useMemo(() => {
+    const rows = users.data ?? [];
+    const term = query.trim().toLowerCase();
+    if (!term) return rows;
+    return rows.filter((user) => user.email.toLowerCase().includes(term));
+  }, [users.data, query]);
 
   return (
     <div className="space-y-6">
