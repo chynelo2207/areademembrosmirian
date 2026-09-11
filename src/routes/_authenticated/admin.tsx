@@ -63,6 +63,17 @@ function AdminPage() {
   }));
   const moduleTitle = (id: string | null) =>
     moduleOptions.find((option) => option.value === id)?.label ?? "Sem módulo";
+  const grantRows = grants.data ?? [];
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+  const startOfWeek = new Date(startOfToday.getTime() - 6 * 24 * 60 * 60 * 1000);
+  const grantsToday = grantRows.filter(
+    (row) => new Date(row.created_at).getTime() >= startOfToday.getTime(),
+  ).length;
+  const grantsWeek = grantRows.filter(
+    (row) => new Date(row.created_at).getTime() >= startOfWeek.getTime(),
+  ).length;
+
   const materialAccess = (plan: string | null) =>
     plan === "completo"
       ? "somente curso completo"
