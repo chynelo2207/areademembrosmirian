@@ -78,11 +78,20 @@ export function UsersSection() {
           </p>
         </CardHeader>
         <CardContent className="space-y-2">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              className="pl-9"
+              value={query}
+              placeholder="Pesquisar por e-mail…"
+              onChange={(event) => setQuery(event.target.value)}
+            />
+          </div>
           {users.isLoading && <p className="text-sm text-muted-foreground">Carregando…</p>}
           {users.error && (
             <p className="text-sm text-destructive">{(users.error as Error).message}</p>
           )}
-          {(users.data ?? []).map((user) => (
+          {visibleUsers.map((user) => (
             <div
               key={user.id}
               className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-border px-3 py-2"
