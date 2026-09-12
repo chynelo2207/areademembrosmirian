@@ -44,7 +44,7 @@ function CommunityPage() {
           </p>
           <Button asChild>
             <a
-              href="https://wa.me/5500000000000"
+              href="https://wa.me/5513996927284"
               target="_blank"
               rel="noopener noreferrer"
             >
