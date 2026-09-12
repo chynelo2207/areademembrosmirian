@@ -53,7 +53,14 @@ function SupportPage() {
     <div className="mx-auto max-w-3xl">
       <h1 className="font-serif text-3xl text-primary">Suporte</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        Estamos por aqui para ajudar com aulas, moldes e acesso.
+        Fale com a gente pelo WhatsApp <strong>+55 13 99692-7284</strong> ou pelo e-mail{" "}
+        <a
+          href="mailto:mirianmariasantarossa@gmail.com"
+          className="text-primary underline decoration-gold/60 underline-offset-2"
+        >
+          mirianmariasantarossa@gmail.com
+        </a>
+        .
       </p>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
@@ -64,7 +71,7 @@ function SupportPage() {
           </CardHeader>
           <CardContent>
             <Button asChild variant="outline" className="w-full">
-              <a href="https://wa.me/5500000000000" target="_blank" rel="noopener noreferrer">
+              <a href="https://wa.me/5513996927284" target="_blank" rel="noopener noreferrer">
                 Falar agora
               </a>
             </Button>
@@ -77,7 +84,7 @@ function SupportPage() {
           </CardHeader>
           <CardContent>
             <Button asChild variant="outline" className="w-full">
-              <a href="mailto:contato@metodomirianserrano.com">Enviar e-mail</a>
+              <a href="mailto:mirianmariasantarossa@gmail.com">Enviar e-mail</a>
             </Button>
           </CardContent>
         </Card>
