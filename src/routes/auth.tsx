@@ -3,6 +3,7 @@ import { MailCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
+import { AccessTutorial } from "@/components/auth/AccessTutorial";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -151,6 +152,8 @@ function AuthPage() {
           Método Mirian Serrano
         </p>
         <h1 className="mt-3 text-center font-serif text-3xl text-primary">Área de membros</h1>
+
+        <AccessTutorial />
 
         {checkEmail || recoverySent ? (
           <div className="mt-8 rounded-lg bg-accent p-5 text-center text-sm text-accent-foreground">
