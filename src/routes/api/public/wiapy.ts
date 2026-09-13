@@ -270,6 +270,7 @@ export const Route = createFileRoute("/api/public/wiapy")({
             checkout_id: checkoutId,
             transaction_id: transactionId,
             status: status || "approved",
+            raw: { ...payload, _parsed_amount: amount },
           },
           { onConflict: "provider,transaction_id" },
         );
