@@ -122,6 +122,20 @@ export const Route = createFileRoute("/api/public/wiapy")({
             ["data", "id"],
           ]) ?? `${email}:${checkoutId ?? "unknown"}`;
 
+        const amountRaw = firstString(payload, [
+          ["payment", "amount"],
+          ["data", "payment", "amount"],
+          ["amount"],
+          ["data", "amount"],
+          ["value"],
+          ["data", "value"],
+          ["price"],
+          ["data", "price"],
+          ["total"],
+          ["data", "total"],
+        ]);
+        const amount = amountRaw ? Number(amountRaw.replace(",", ".").replace(/[^\d.]/g, "")) : null;
+
         const basicoId = process.env["WIAPY_CHECKOUT_BASICO_ID"] ?? "";
         const completoId = process.env["WIAPY_CHECKOUT_COMPLETO_ID"] ?? "";
 
@@ -130,7 +144,12 @@ export const Route = createFileRoute("/api/public/wiapy")({
             ? "completo"
             : checkoutId && basicoId && checkoutId === basicoId
               ? "classico"
-              : null;
+              : // Fallback pelo valor: 47,90 e 119,98 = completo; 27,90 = clássico
+                amount != null && amount >= 40
+                ? "completo"
+                : amount != null
+                  ? "classico"
+                  : null;
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
@@ -251,6 +270,7 @@ export const Route = createFileRoute("/api/public/wiapy")({
             checkout_id: checkoutId,
             transaction_id: transactionId,
             status: status || "approved",
+            raw: { ...payload, _parsed_amount: amount },
           },
           { onConflict: "provider,transaction_id" },
         );
