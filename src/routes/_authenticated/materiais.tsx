@@ -7,11 +7,20 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMaterials } from "@/hooks/useMembersData";
 import { resolveMaterialUrl } from "@/lib/members";
+import { supabase } from "@/integrations/supabase/client";
 
-async function openMaterial(fileUrl: string) {
+async function openMaterial(materialId: string, fileUrl: string) {
   try {
     const url = await resolveMaterialUrl(fileUrl);
     window.open(url, "_blank", "noopener,noreferrer");
+    // Registra o acesso; não bloqueia a abertura do arquivo se isso falhar.
+    const { data: auth } = await supabase.auth.getUser();
+    if (auth.user) {
+      void supabase.from("material_views").insert({
+        user_id: auth.user.id,
+        material_id: materialId,
+      });
+    }
   } catch (error) {
     toast.error(error instanceof Error ? error.message : "Não foi possível abrir o arquivo");
   }
@@ -74,7 +83,7 @@ function MaterialsPage() {
                   {material.file_url ? (
                     <Button
                       variant="outline"
-                      onClick={() => void openMaterial(material.file_url as string)}
+                      onClick={() => void openMaterial(material.id, material.file_url as string)}
                     >
                       <Download className="mr-2 h-4 w-4" /> {isImage ? "Abrir" : "Baixar"}
                     </Button>
