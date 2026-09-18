@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { KeyRound, Search, ShieldCheck } from "lucide-react";
+import { FileText, KeyRound, ListChecks, Search, ShieldCheck } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -18,8 +18,105 @@ import {
   useChangeOwnPassword,
   useSetUserAdmin,
   useSetUserPassword,
+  useUserProgress,
   useUsers,
 } from "@/hooks/useUsers";
+
+const REFUND_STATUSES = ["refunded", "refund", "chargeback", "revoked", "estornado", "cancelado", "canceled", "cancelled"];
+
+function statusLabel(user: { plan: "classico" | "completo" | null; lastPurchaseStatus: string | null }) {
+  if (user.plan) return user.plan === "completo" ? "Plano completo" : "Plano clássico";
+  if (user.lastPurchaseStatus && REFUND_STATUSES.some((s) => user.lastPurchaseStatus?.includes(s))) {
+    return "Reembolsado / acesso revogado";
+  }
+  return "Sem compra liberada";
+}
+
+function ProgressDialog({ userId, email, onClose }: { userId: string | null; email: string; onClose: () => void }) {
+  const progress = useUserProgress(userId);
+
+  return (
+    <Dialog open={userId !== null} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle className="font-serif">Progresso de {email}</DialogTitle>
+        </DialogHeader>
+
+        {progress.isLoading && <p className="text-sm text-muted-foreground">Carregando…</p>}
+        {progress.error && (
+          <p className="text-sm text-destructive">{(progress.error as Error).message}</p>
+        )}
+
+        {progress.data && (
+          <div className="space-y-5">
+            <div>
+              <h3 className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-foreground">
+                <ListChecks className="h-4 w-4" /> Aulas concluídas ({progress.data.completedLessons}/
+                {progress.data.totalLessons})
+              </h3>
+              {progress.data.lessons.length === 0 ? (
+                <p className="text-sm text-muted-foreground">Nenhuma aula concluída.</p>
+              ) : (
+                <ul className="space-y-1 text-sm">
+                  {progress.data.lessons.map((lesson, index) => (
+                    <li key={index} className="flex justify-between gap-3 text-muted-foreground">
+                      <span className="truncate">
+                        {lesson.moduleTitle} — {lesson.title}
+                      </span>
+                      <span className="shrink-0">
+                        {new Date(lesson.completedAt).toLocaleString("pt-BR")}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <div>
+              <h3 className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-foreground">
+                <FileText className="h-4 w-4" /> Materiais abertos/baixados
+              </h3>
+              {progress.data.materials.length === 0 ? (
+                <p className="text-sm text-muted-foreground">Nenhum material aberto.</p>
+              ) : (
+                <ul className="space-y-1 text-sm">
+                  {progress.data.materials.map((material, index) => (
+                    <li key={index} className="flex justify-between gap-3 text-muted-foreground">
+                      <span className="truncate">{material.title}</span>
+                      <span className="shrink-0">
+                        {new Date(material.viewedAt).toLocaleString("pt-BR")}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <div>
+              <h3 className="mb-2 text-sm font-semibold text-foreground">Histórico de compras</h3>
+              {progress.data.purchases.length === 0 ? (
+                <p className="text-sm text-muted-foreground">Sem registro de compra.</p>
+              ) : (
+                <ul className="space-y-1 text-sm">
+                  {progress.data.purchases.map((purchase, index) => (
+                    <li key={index} className="flex justify-between gap-3 text-muted-foreground">
+                      <span>
+                        {purchase.provider} · {purchase.plan} · {purchase.status}
+                      </span>
+                      <span className="shrink-0">
+                        {new Date(purchase.createdAt).toLocaleString("pt-BR")}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 export function UsersSection() {
   const users = useUsers();
@@ -28,6 +125,7 @@ export function UsersSection() {
   const changeOwn = useChangeOwnPassword();
 
   const [target, setTarget] = useState<{ id: string; email: string } | null>(null);
+  const [progressTarget, setProgressTarget] = useState<{ id: string; email: string } | null>(null);
   const [newPassword, setNewPassword] = useState("");
   const [ownPassword, setOwnPassword] = useState("");
   const [query, setQuery] = useState("");
@@ -99,11 +197,7 @@ export function UsersSection() {
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium text-foreground">{user.email}</p>
                 <p className="truncate text-xs text-muted-foreground">
-                  {user.plan
-                    ? user.plan === "completo"
-                      ? "Plano completo"
-                      : "Plano clássico"
-                    : "Sem compra liberada"}
+                  {statusLabel(user)}
                   {user.lastSignInAt
                     ? ` · último acesso ${new Date(user.lastSignInAt).toLocaleDateString("pt-BR")}`
                     : " · nunca acessou"}
@@ -125,6 +219,14 @@ export function UsersSection() {
                   />
                   <span className="text-xs text-muted-foreground">Admin</span>
                 </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setProgressTarget({ id: user.id, email: user.email })}
+                >
+                  <ListChecks className="mr-1.5 h-4 w-4" />
+                  Progresso
+                </Button>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -182,6 +284,12 @@ export function UsersSection() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <ProgressDialog
+        userId={progressTarget?.id ?? null}
+        email={progressTarget?.email ?? ""}
+        onClose={() => setProgressTarget(null)}
+      />
     </div>
   );
 }
