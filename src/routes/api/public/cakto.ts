@@ -98,8 +98,31 @@ export const Route = createFileRoute("/api/public/cakto")({
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
+        // Sempre grava um registro permanente do evento (mesmo reembolso), independente
+        // do que acontecer com o acesso. Isso mantém o histórico mesmo depois que
+        // access_grants for apagado.
+        const logPurchase = (planForLog: "classico" | "completo", statusForLog: string) =>
+          supabaseAdmin.from("purchases").upsert(
+            {
+              email,
+              plan: planForLog,
+              provider: "cakto",
+              checkout_id: orderId,
+              transaction_id: orderId ?? `cakto-${email}-${Date.now()}`,
+              status: statusForLog,
+              raw: payload as never,
+            },
+            { onConflict: "provider,transaction_id" },
+          );
+
         if (REFUNDED.some((item) => status.includes(item))) {
+          const { data: existingGrant } = await supabaseAdmin
+            .from("access_grants")
+            .select("plan")
+            .ilike("email", email)
+            .maybeSingle();
           await supabaseAdmin.from("access_grants").delete().ilike("email", email);
+          await logPurchase(existingGrant?.plan ?? "classico", "refunded");
           return Response.json({ ok: true, action: "revoked", email });
         }
 
@@ -128,12 +151,14 @@ export const Route = createFileRoute("/api/public/cakto")({
               order_id: orderId,
             })
             .eq("id", existing.id);
+          await logPurchase(upgraded ? "completo" : "classico", "approved");
           return Response.json({ ok: true, action: "updated", email, plan: upgraded ? "completo" : "classico" });
         }
 
         await supabaseAdmin
           .from("access_grants")
           .insert({ email, plan, source: "cakto", order_id: orderId });
+        await logPurchase(plan, "approved");
 
         return Response.json({ ok: true, action: "created", email, plan });
       },
