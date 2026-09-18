@@ -3,11 +3,20 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
-import { listUsers, setUserAdmin, setUserPassword } from "@/lib/users.functions";
+import { getUserProgress, listUsers, setUserAdmin, setUserPassword } from "@/lib/users.functions";
 
 export function useUsers() {
   const fetchUsers = useServerFn(listUsers);
   return useQuery({ queryKey: ["managed-users"], queryFn: () => fetchUsers() });
+}
+
+export function useUserProgress(userId: string | null) {
+  const fetchProgress = useServerFn(getUserProgress);
+  return useQuery({
+    queryKey: ["user-progress", userId],
+    queryFn: () => fetchProgress({ data: { userId: userId as string } }),
+    enabled: Boolean(userId),
+  });
 }
 
 export function useSetUserPassword() {
