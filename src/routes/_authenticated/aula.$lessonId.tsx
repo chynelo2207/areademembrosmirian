@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, CheckCircle2, Clock, Film } from "lucide-react";
@@ -7,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLessons, useModules, useProgress } from "@/hooks/useMembersData";
 import { toEmbedUrl, toggleLessonDone } from "@/lib/members";
+
+const AUTO_COMPLETE_MS = 20_000;
 
 export const Route = createFileRoute("/_authenticated/aula/$lessonId")({
   head: () => ({
@@ -37,16 +40,40 @@ function LessonPage() {
   const previous = index > 0 ? siblings[index - 1] : undefined;
   const next = index >= 0 && index < siblings.length - 1 ? siblings[index + 1] : undefined;
   const isDone = (progress.data ?? []).includes(lessonId);
+  const autoMarkedRef = useRef(false);
 
   const mutation = useMutation({
-    mutationFn: (done: boolean) => toggleLessonDone(lessonId, done),
-    onSuccess: (_data, done) => {
+    mutationFn: (vars: { done: boolean; auto?: boolean }) => toggleLessonDone(lessonId, vars.done),
+    onSuccess: (_data, vars) => {
       queryClient.invalidateQueries({ queryKey: ["progress"] });
-      toast.success(done ? "Aula concluída!" : "Marcação removida");
-      if (done && next) navigate({ to: "/aula/$lessonId", params: { lessonId: next.id } });
+      if (vars.done) {
+        toast.success(vars.auto ? "Aula marcada como concluída" : "Aula concluída!");
+      } else {
+        toast.success("Marcação removida");
+      }
+      // Só pula pra próxima aula quando a pessoa clica manualmente em "concluída";
+      // na marcação automática ela ainda pode estar assistindo o vídeo.
+      if (vars.done && !vars.auto && next) {
+        navigate({ to: "/aula/$lessonId", params: { lessonId: next.id } });
+      }
     },
     onError: () => toast.error("Não foi possível salvar seu progresso"),
   });
+
+  // Marca a aula como concluída automaticamente depois de 20s na página,
+  // sem depender da pessoa clicar em "marcar como concluída".
+  useEffect(() => {
+    autoMarkedRef.current = false;
+    if (isDone) return;
+    const timer = setTimeout(() => {
+      if (!autoMarkedRef.current) {
+        autoMarkedRef.current = true;
+        mutation.mutate({ done: true, auto: true });
+      }
+    }, AUTO_COMPLETE_MS);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lessonId, isDone]);
 
   if (lessons.isLoading || modules.isLoading) {
     return <Skeleton className="mx-auto h-72 max-w-4xl" />;
@@ -105,7 +132,7 @@ function LessonPage() {
         <Button
           variant={isDone ? "outline" : "default"}
           disabled={mutation.isPending}
-          onClick={() => mutation.mutate(!isDone)}
+          onClick={() => mutation.mutate({ done: !isDone })}
         >
           <CheckCircle2 className="mr-2 h-4 w-4" />
           {isDone ? "Concluída" : "Marcar como concluída"}
