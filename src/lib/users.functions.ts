@@ -12,6 +12,10 @@ export type ManagedUser = {
   plan: "classico" | "completo" | null;
   /** Último status conhecido de compra (approved, refunded, chargeback...), mesmo se o acesso já foi revogado. */
   lastPurchaseStatus: string | null;
+  lessonsCompleted: number;
+  lessonsTotal: number;
+  materialsDownloaded: number;
+  materialsTotal: number;
 };
 
 export type UserProgress = {
@@ -44,6 +48,18 @@ export const listUsers = createServerFn({ method: "GET" })
       .from("purchases")
       .select("email, status, created_at")
       .order("created_at", { ascending: false });
+    const { count: lessonsTotal } = await supabaseAdmin
+      .from("lessons")
+      .select("id", { count: "exact", head: true });
+    const { count: materialsTotal } = await supabaseAdmin
+      .from("materials")
+      .select("id", { count: "exact", head: true });
+    const { data: allProgress } = await supabaseAdmin
+      .from("lesson_progress")
+      .select("user_id, lesson_id");
+    const { data: allViews } = await supabaseAdmin
+      .from("material_views")
+      .select("user_id, material_id");
 
     const adminIds = new Set(
       (roles ?? []).filter((row) => row.role === "admin").map((row) => row.user_id),
@@ -59,6 +75,19 @@ export const listUsers = createServerFn({ method: "GET" })
       if (!lastStatusByEmail.has(key)) lastStatusByEmail.set(key, row.status);
     }
 
+    const completedLessonsByUser = new Map<string, number>();
+    for (const row of allProgress ?? []) {
+      completedLessonsByUser.set(row.user_id, (completedLessonsByUser.get(row.user_id) ?? 0) + 1);
+    }
+    // material_views pode ter mais de uma linha por material (cada abertura conta),
+    // então usamos um Set por usuário pra contar materiais distintos baixados.
+    const downloadedMaterialsByUser = new Map<string, Set<string>>();
+    for (const row of allViews ?? []) {
+      const set = downloadedMaterialsByUser.get(row.user_id) ?? new Set<string>();
+      set.add(row.material_id);
+      downloadedMaterialsByUser.set(row.user_id, set);
+    }
+
     return data.users.map((user) => ({
       id: user.id,
       email: user.email ?? "",
@@ -67,6 +96,10 @@ export const listUsers = createServerFn({ method: "GET" })
       isAdmin: adminIds.has(user.id),
       plan: planByEmail.get((user.email ?? "").toLowerCase()) ?? null,
       lastPurchaseStatus: lastStatusByEmail.get((user.email ?? "").toLowerCase()) ?? null,
+      lessonsCompleted: completedLessonsByUser.get(user.id) ?? 0,
+      lessonsTotal: lessonsTotal ?? 0,
+      materialsDownloaded: downloadedMaterialsByUser.get(user.id)?.size ?? 0,
+      materialsTotal: materialsTotal ?? 0,
     }));
   });
 
