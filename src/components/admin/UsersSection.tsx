@@ -194,7 +194,7 @@ export function UsersSection() {
               key={user.id}
               className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-border px-3 py-2"
             >
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium text-foreground">{user.email}</p>
                 <p className="truncate text-xs text-muted-foreground">
                   {statusLabel(user)}
@@ -202,6 +202,29 @@ export function UsersSection() {
                     ? ` · último acesso ${new Date(user.lastSignInAt).toLocaleDateString("pt-BR")}`
                     : " · nunca acessou"}
                 </p>
+                <div className="mt-2 flex max-w-xs items-center gap-2">
+                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-secondary">
+                    <div
+                      className="h-full rounded-full bg-primary transition-all"
+                      style={{
+                        width: `${
+                          user.lessonsTotal > 0
+                            ? Math.round((user.lessonsCompleted / user.lessonsTotal) * 100)
+                            : 0
+                        }%`,
+                      }}
+                    />
+                  </div>
+                  <span className="shrink-0 text-xs text-muted-foreground">
+                    {user.lessonsTotal > 0
+                      ? Math.round((user.lessonsCompleted / user.lessonsTotal) * 100)
+                      : 0}
+                    % do curso
+                  </span>
+                  <span className="shrink-0 text-xs text-muted-foreground">
+                    · {user.materialsDownloaded}/{user.materialsTotal} materiais
+                  </span>
+                </div>
               </div>
               <div className="flex items-center gap-3">
                 {user.isAdmin && (
